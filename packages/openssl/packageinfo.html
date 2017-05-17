@@ -1,0 +1,19 @@
+OpenSSL is the standard library for handling SSL-encrypted communication, 
+which is used by many other utilities. Some Android versions have an
+implementation of OpenSSL and, if it works, it is generally better
+<i>not</i> to install the KBOX package. Consequently, OpenSSL
+is not listed as a formal dependency by any KBOX package, even though
+most of them use it.
+<p/>
+Unfortunately, later Android versions
+use a Google variant of OpenSSL called "BoringSSL", which is almost
+<i>but not quite</i> compatible with OpenSSL. If you get "undefined
+symbol" errors and such-like when trying to run a utility that uses
+SSL, then you probably need to install this package. However, you
+should bear in mind that this can cause compatibity problems (only
+in KBOX) when running programs (such as the Android Java JVM)
+from within KBOX. Because the Google "BoringSSL" librarues  have the same
+names as the almost-equivalent SSL libraries, this incompatibility
+is hard to avoid.
+
+

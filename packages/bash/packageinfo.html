@@ -1,0 +1,9 @@
+Bash is probably the most popular Linux command-line shell. The Busybox
+shell does a pretty good job of behaving like <code>bash</code>, but the real thing
+is better.
+<p/>
+This package replaces the Busybox implementation in <code>/bin/bash</code>, but it does
+not replace the one in <code>/bin/sh</code> (it would be necessary to exit the KBOX
+environment to do this.)  To make Bash the default shell without modifying
+<code>/bin/sh</code>, add it as a command to <code>kbox_shell</code> in the terminal
+emulator's settings: <code>kbox_shell -c /bin/bash</code>. 

@@ -1,0 +1,8 @@
+A text-to-speech engine based on phoneme synthesis. Because there is no direct
+access to audio hardware on a non-rooted Android device, this utility requires
+the assistance of <code>android-audio-sink</code> to capture and play
+the audio stream. The scripts <code>/usr/bin/say</code> and
+<code>/usr/bin/sayfile</code> demonstrate how to pipe the audio data into
+<code>android-audio-sink</code>. Note that <code>android-audio-sink</code>
+is not stated as a dependency, because <code>espeak</code> will work
+without it, for (say) writing the audio data to a file.

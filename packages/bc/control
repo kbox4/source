@@ -1,0 +1,7 @@
+Package: bc
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends: readline
+Description: An arbitary-precision calculator.

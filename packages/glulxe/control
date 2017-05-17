@@ -1,0 +1,7 @@
+Package: glulxe
+Version: %VERSION%
+Section: games
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: An interpreter for Glulx interactive fiction games. 

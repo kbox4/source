@@ -1,0 +1,7 @@
+Package: python3
+Version: %VERSION%
+Section: development
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The Python3 programming language and runtime environment. 

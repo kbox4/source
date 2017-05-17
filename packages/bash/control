@@ -1,0 +1,7 @@
+Package: bash
+Version: %VERSION%
+Section: shells
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The BASH shell. This replaces the Busybox emulation of BASH in /bin/bash, but does not replace /bin/sh (because it can't). To replace /bin/sh you will need to exit the KBOX environment. To have BASH the default shell without replacing /bin/sh, pass it on the kbox_shell command line, e.g., "kbox_shell -c /usr/bin/bash" 

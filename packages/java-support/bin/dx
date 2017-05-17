@@ -1,0 +1,3 @@
+#!/bin/bash
+dalvikvm -cp /usr/share/java-support/dx.dex com.android.dx.command.Main "$@"
+

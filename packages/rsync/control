@@ -1,0 +1,7 @@
+Package: rsync
+Version: 3.1.2
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends: dropbear-client
+Description: File synchronization utility

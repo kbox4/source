@@ -1,0 +1,7 @@
+Package: readline
+Version: %VERSION%
+Section: libraries
+Priority: optional
+Architecture: %ARCH%
+Depends: ncurses
+Description: The standard GNU line editing library, used by many other utilities. 

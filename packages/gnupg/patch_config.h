@@ -1,0 +1,8 @@
+511c511
+< #define HAVE_USELOCALE 1
+---
+> //#define HAVE_USELOCALE 1
+813c813
+< #define USE_SHM_COPROCESSING 1
+---
+> //#define USE_SHM_COPROCESSING 1

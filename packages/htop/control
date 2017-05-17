@@ -1,0 +1,7 @@
+Package: htop
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: An interactive process manager. 

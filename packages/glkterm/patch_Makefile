@@ -1,0 +1,8 @@
+16c16
+< #INCLUDEDIRS = -I/usr/5include
+---
+> INCLUDEDIRS = -I/usr/include/ncurses
+22c22
+< CFLAGS = $(OPTIONS) $(INCLUDEDIRS)
+---
+> CFLAGS = $(OPTIONS) $(INCLUDEDIRS) -fpie -fpic

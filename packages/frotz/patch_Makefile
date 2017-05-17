@@ -1,0 +1,57 @@
+19c19
+< MAN_PREFIX = $(PREFIX)
+---
+> MAN_PREFIX = $(PREFIX)/share
+57c57
+< #INCL = -I/usr/local/include
+---
+> INCL = -I/usr/include/ncurses
+84c84
+< #CURSES_DEF = -DUSE_NCURSES_H
+---
+> CURSES_DEF = -DUSE_NCURSES_H
+198c198
+< 	$(CC) -o $(BINNAME)$(EXTENSION) $(TARGETS) $(LIB) $(CURSES) $(SOUND_LIB)
+---
+> 	$(CC) $(CFLAGS) $(INCL) $(LDFLAGS) -o $(BINNAME)$(EXTENSION) $(TARGETS) $(LIB) $(CURSES) $(SOUND_LIB)
+203c203
+< 	$(CC) -o d$(BINNAME)$(EXTENSION) $(COMMON_TARGET) $(DUMB_TARGET) $(LIB)
+---
+> 	$(CC) $(CFLAGS) $(INCL) -o d$(BINNAME)$(EXTENSION) $(COMMON_TARGET) $(DUMB_TARGET) $(LIB)
+208c208
+< 	$(CC) -o s$(BINNAME) $(COMMON_TARGET) $(SDL_TARGET) $(BLORB_TARGET) $(SDL_LIBS)
+---
+> 	$(CC) $(CFLAGS) $(INCL) -o s$(BINNAME) $(COMMON_TARGET) $(SDL_TARGET) $(BLORB_TARGET) $(SDL_LIBS)
+217c217
+< 	$(CC) $(OPTS) $(COMMON_DEFS) -o $@ -c $<
+---
+> 	$(CC) $(CFLAGS) $(INCL)  $(OPTS) $(COMMON_DEFS) -o $@ -c $<
+220c220
+< 	$(CC) $(OPTS) -o $@ -c $<
+---
+> 	$(CC) $(CFLAGS) $(INCL) $(OPTS) -o $@ -c $<
+223c223
+< 	$(CC) $(OPTS) -o $@ -c $<
+---
+> 	$(CC) $(CFLAGS) $(INCL) $(OPTS) -o $@ -c $<
+226c226
+< 	$(CC) $(OPTS) $(CURSES_DEFS) -o $@ -c $<
+---
+> 	$(CC) $(CFLAGS) $(INCL) $(OPTS) $(CURSES_DEFS) -o $@ -c $<
+229c229
+< 	$(CC) $(OPTS) $(SDL_DEFS) -o $@ -c $<
+---
+> 	$(CC) $(CFLAGS) $(INCL) $(OPTS) $(SDL_DEFS) -o $@ -c $<
+282,286c282,287
+< 	strip $(BINNAME)$(EXTENSION)
+< 	install -d $(PREFIX)/bin
+< 	install -d $(MAN_PREFIX)/man/man6
+< 	install -c -m 755 $(BINNAME)$(EXTENSION) $(PREFIX)/bin
+< 	install -c -m 644 doc/$(NAME).6 $(MAN_PREFIX)/man/man6
+---
+> 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
+> 	$(STRIP) $(BINNAME)$(EXTENSION)
+> 	install -d $(DESTDIR)/$(PREFIX)/bin
+> 	install -d $(DESTDIR)/$(MAN_PREFIX)/man/man6
+> 	install -c -m 755 $(BINNAME)$(EXTENSION) $(DESTDIR)/$(PREFIX)/bin
+> 	install -c -m 644 doc/$(NAME).6 $(DESTDIR)/$(MAN_PREFIX)/man/man6

@@ -1,0 +1,7 @@
+Package: groff
+Version: %VERSION%
+Section: libraries
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: Traditional Unix text formatting system; required for reading man pages. 

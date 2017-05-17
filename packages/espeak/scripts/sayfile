@@ -1,0 +1,2 @@
+#/bin/bash
+espeak -w stdout -f $1 | android-audio-sink

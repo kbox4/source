@@ -1,0 +1,7 @@
+Package: kbox-login
+Version: %VERSION%
+Section: security
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A login helper, for use with utilities that expect to be able to invoke /bin/login. 

@@ -1,0 +1,7 @@
+Package: uconv
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A flexible, command-line unit converter. See http://kevinboone.net/README_uconv.html for more details. 

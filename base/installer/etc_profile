@@ -1,0 +1,19 @@
+# Customize environment here, if necessary
+
+HOME=/home/kbox
+PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/android_root/system/bin
+TERMINFO=/usr/share/terminfo
+MANPATH=/usr/share/man
+GROFF_FONT_PATH=/usr/share/groff/current/font
+GROFF_TMAC_PATH=/usr/share/groff/current/tmac
+TMPDIR=/tmp
+TERM=linux
+ANDROID_DATA=/data
+ANDROID_ROOT=/system
+PS1="\W\$ "
+
+export HOME PATH TERMINFO MANPATH GROFF_FONT_PATH GROFF_TMAC_PATH TMPDIR TERM PS1 ANDROID_DATA ANDROID_ROOT
+
+# Finish with 'cd'. This is a bug fix -- do not remove this line
+cd
+

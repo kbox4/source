@@ -1,0 +1,43 @@
+DEB=java-support-0.0.1_kbox3.deb
+BINNAME=java-support
+BIN=$(BINNAME)
+JAVAC=/usr/jdk1.6.0_45/bin/javac
+DX=/home/kevin/lib/android-sdk-linux/build-tools/19.0.1/dx
+ANDROIDJAR=/home/kevin/lib/android-sdk-linux/platforms/android-10/android.jar
+
+all:
+	mkdir -p image/usr/bin
+	mkdir -p image/usr/lib
+	mkdir -p image/usr/share/java-support
+	cp -p bin/* image/usr/bin
+	mkdir -p target/dx
+	mkdir -p target/tools
+	#$(JAVAC) -d target/dx src/com/android/dx/*.java src/com/android/dx/ssa/*.java src/com/android/dx/ssa/back/*.java src/com/android/dx/rop/*.java src/com/android/dx/rop/cst/*.java src/com/android/dx/rop/annotation/*.java src/com/android/dx/rop/code/*.java src/com/android/dx/rop/type/*.java src/com/android/dx/util/*.java src/com/android/dx/command/*.java src/com/android/dx/command/dexer/*.java src/com/android/dx/command/dump/*.java src/com/android/dx/command/annotool/*.java src/com/android/dx/dex/file/*.java src/com/android/dx/dex/code/*.java src/com/android/dx/dex/code/form/*.java  src/com/android/dx/dex/cf/*.java src/com/android/dx/cf/iface/*.java src/com/android/dx/cf/attrib/*.java src/com/android/dx/cf/direct/*.java src/com/android/dx/cf/cst/*.java src/com/android/dx/cf/code/*.java
+	#blah
+	$(JAVAC) -d target/tools  src/com/sun/tools/javac/*.java src/com/sun/tools/javac/main/*.java src/com/sun/tools/javac/util/*.java src/com/sun/tools/javac/code/*.java src/com/sun/tools/javac/jvm/*.java src/com/sun/tools/javac/processing/*.java src/com/sun/source/util/*.java src/com/sun/tools/javac/tree/*.java src/com/sun/tools/javac/file/*.java src/com/sun/tools/javac/parser/*.java src/com/sun/tools/javac/comp/*.java src/com/sun/tools/javac/model/*.java src/com/sun/source/tree/*.java src/com/sun/tools/javac/api/*.java src/javax/tools/*.java src/com/sun/tools/javac/util/*.java src/javax/lang/model/element/*.java src/javax/lang/model/type/*.java src/javax/lang/model/util/*.java src/javax/annotation/processing/*.java src/javax/lang/model/*.java src/com/sun/source/tree/*.java src/com/sun/source/util/*.java src/com/sun/tools/javac/sym/*.java 
+	#main
+	(cd target/dx; zip -r ../dx.jar .)
+	(cd target/tools; zip -r ../tools.jar .)
+	#$(DX) --dex --output=target/dx.dex target/dx.jar
+	$(DX) --dex --output=target/tools.dex target/tools.jar
+	cp target/dx.dex image/usr/share/java-support/
+	cp target/tools.dex image/usr/share/java-support/
+	cp properties/tools.properties image/usr/share/java-support/
+	cp $(ANDROIDJAR) image/usr/share/java-support/
+	#blah
+	mkdir -p out
+	mkdir -p image/data
+	(cd image/data; ln -sf /android_root/data/dalvik-cache .)
+	(cd image; ln -sf /system/lib/libjavacrypto.so usr/lib)
+	tar cfz out/data.tar.gz -C image "." 
+	tar cfz out/control.tar.gz ./control 
+	echo "2.0" > out/debian-binary
+	rm -f $(DEB) 
+	ar rcs $(DEB) out/debian-binary out/data.tar.gz out/control.tar.gz 
+	cp $(DEB) ../../web/target/	
+
+clean:
+	make -f Makefile clean
+	rm -rf image/
+	rm -rf out/
+	rm -f *.deb

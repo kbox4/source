@@ -1,0 +1,7 @@
+Package: java-support
+Version: %VERSION%
+Section: development
+Priority: optional
+Architecture: %ARCH%
+Depends:
+Description: Various utilities for Java support under KBOX.

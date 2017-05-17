@@ -1,0 +1,7 @@
+Package: ftp
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: Traditional FTP client from the 1980s. 

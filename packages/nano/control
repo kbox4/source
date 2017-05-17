@@ -1,0 +1,7 @@
+Package: nano
+Version: %VERSION%
+Section: editors
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The GNU Nano text editor. 

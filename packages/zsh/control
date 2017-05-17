@@ -1,0 +1,7 @@
+Package: zsh
+Version: %VERSION%
+Section: shells
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The Z shell (without the documentation package) 

@@ -1,0 +1,7 @@
+Package: coreutils
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: Basic Linux utilities for file handling and similar operations. These are the full versions of the utilities for which busybox provides minimal versions. This package contains the man pages for the coreutils utilities -- these man pages may well not correspond to the busybox version. It is expected that KBOX users install coreutils once the system is basically functional, as the busybox versions of the standard utilities lack important functionality that may be important in some applications. 

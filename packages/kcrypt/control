@@ -1,0 +1,7 @@
+Package: kcrypt
+Version: %VERSION%
+Section: security
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A command-line file encryptor/obfusctor, based on the IDEA algorithm. 

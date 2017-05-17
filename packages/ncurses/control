@@ -1,0 +1,7 @@
+Package: ncurses
+Version: %VERSION%
+Section: libraries
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: The standard screen-handling library and utilities. This package contains the development bits as well as the binaries, but not ther terminal database -- only the minimal definitions needed for use with a Linux console. 

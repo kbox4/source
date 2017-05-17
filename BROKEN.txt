@@ -1,0 +1,96 @@
+Here is a list of things that are know to be broken or incomplete in the
+latest version.
+
+Utilities that act as network servers (e.g., sshd) are mostly not included in
+this release at all.  This is because later versions of Android are
+increasingly reluctant to allow incoming network connections, and so I lack any
+way of testing whether they work or not.
+
+"file" won't build unless there is a version on the host that is the same version as
+the version being cross-compiled. It may be necessary to update your local "file"
+first.
+
+Ditto "python".
+
+There is a horrible bug somewhere (don't know where -- terminal? Bionic?) which
+sometimes causes input from STDIN to fail immediately with an  EAGAIN return
+code. When this happens, any application that uses traditional methods of
+accepting keyboard input (e.g., getc(stdin)) will fail.  It is still possible
+to do keyboard input by reading from /dev/tty and, where possible, I tried
+modifying code to do this, in an effort to avoid the bug, which is
+unpredictable. However, with something as complex as Perl, for example, I can't
+find every place where keyboard input is taken, and fix it. So -- sorry -- some
+applications will sometimes be unable to prompt for keyboard input. The
+solution seems to be to close the terminal app and start again. 
+
+The "rm" utilities from coreutils is excluded from the build, so the Busybox
+version will be left in place after installing coreutils.  The coreutils
+version seems to be incompatible, for reasons that are not very clear.  Most
+likely there will be other incompatibilities as well.
+
+android-audio-sink is undocumented, apart from the HTML file in the source. At 
+present, espeak is the only utility that uses it, although that might change in 
+the future.
+
+frobtads is erratic with some games -- screen garbled, that kind of thing. I
+can't tell if that is just a problem with my KBOX port, or a general problem
+with some games. I can investigate if there is any interest.
+
+java-support: see note about OpenSSL.
+
+openssl: in general, try _not_ installing this, unless you get error messages
+about missing symbols. On some platforms it _might_ be possible to use the
+existing SSL implementation in /system/lib/openssl.so, etc. If it is, then this
+will remove a bunch of nasty compatibility problems (see OpenSSL issues)
+
+OpenSSL issues
+
+Many KBOX utilities depend on OpenSSL. The KBOX OpenSSL is currently a stock
+version 1.0.2a, and all the utiltiies expect to see that version.
+Unfortunately, Android itself no longer uses OpenSSL -- it uses a Google fork
+of OpenSSL which Google calls "BoringSSL". BoringSSL is broadly compatible with
+OpenSSL, but there are is a long list of API differences. Morover, 
+Google is very clear that BoringSSL is not for general use, and the API may well change.
+
+Problems only arise in this area when KBOX apps call built-in system apps --
+the media player, for example, or the Dalvik JVM. These system apps use SSL,
+and are built against BoringSSL. They can't (properly) use the OpenSSL provided
+by KBOX. What's really unfortunate is that the the BoringSSL libraries are also
+called libssl.so and libcrypt.so, just as the OpenSSL variants are. So if KBOX
+favours the Android versions of these libraries, utilties linked against
+OpenSSL won't work. If it favours its own versions (as it does), then Android
+system apps won't work.
+
+There is no adequate solution to this problem, given that Android's linked is
+not configurable at runtime. For the media player we can get around the problem
+-- so long as we aren't actually trying to play SSL-encoded streams -- by
+simply exporting some symbols from the app itself that the system media player
+doesn't find in the KBOX version of libopenssl.so; the andplay utilities does
+this.
+
+For Java, and the JVM, there's no real solution, except to delete the KBOX
+versions of /usr/lib/libssl.so and /usr/lib/libcrypto.so, and replace them with
+symlinks to /system/lib/libssl.so and /system/lib/libssl.so. This is a PITA,
+but it seems to be the price that needs to be paid for using Android in a way
+it was never designed to be used.
+
+tmux -- I gave up on this. I couldn't find any version that came close to
+building with an up-to-date NDK. It probably can be made to work, with effort,
+if there is any interest
+
+Bash --The BASH shell. This replaces the Busybox emulation of BASH in
+/bin/bash, but does not replace /bin/sh (because it can't). To replace /bin/sh
+you will need to exit the KBOX environment. To have BASH the default shell
+without replacing /bin/sh, pass it on the kbox_shell command line, e.g.,
+"kbox_shell -c /usr/bin/bash" 
+
+
+
+ 
+
+
+
+
+
+
+

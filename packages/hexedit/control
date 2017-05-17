@@ -1,0 +1,7 @@
+Package: hexedit 
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A utility for editing files in hexadecimal format. 

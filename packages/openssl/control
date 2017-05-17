@@ -1,0 +1,7 @@
+Package: openssl
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: OpenSSL SSL library and utilities. This package contains the runtime libraries and the development components.

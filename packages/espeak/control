@@ -1,0 +1,7 @@
+Package: espeak
+Version: %VERSION%
+Section: media
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A lightweight text-to-speech engine that uses only phoneme synthesis. On KBOX, use this with android-audio-sink 

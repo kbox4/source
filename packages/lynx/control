@@ -1,0 +1,7 @@
+Package: lynx
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A text-mode web browser. 

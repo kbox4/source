@@ -1,0 +1,7 @@
+Package: solunar
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: A command-line utility for calculating sun and moon rise and set times, and related astronomical information. 

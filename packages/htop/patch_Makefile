@@ -1,0 +1,4 @@
+365c365
+< LIBS = -lncurses -ltinfo -lm -lncurses 
+---
+> LIBS = -lncurses -lm -lncurses 

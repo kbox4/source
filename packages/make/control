@@ -1,0 +1,7 @@
+Package: make
+Version: %VERSION%
+Section: development
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: GNU make utility. 

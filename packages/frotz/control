@@ -1,0 +1,7 @@
+Package: frotz
+Version: %VERSION%
+Section: games
+Priority: optional
+Architecture: %ARCH%
+Depends: ncurses
+Description: An interpreter for z-code (Infocom) interactive fiction games. 

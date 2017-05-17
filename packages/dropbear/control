@@ -1,0 +1,7 @@
+Package: dropbear-client
+Version: 2016.74
+Section: networking
+Priority: optional
+Architecture: %ARCH% 
+Depends: 
+Description: The Dropbear SSH client

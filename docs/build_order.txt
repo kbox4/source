@@ -1,0 +1,36 @@
+KBOX page build order
+
+Depenencies will be satisfied if the packages are built in the following order.
+Note that almost everything depends on ncurses, readline, and openssl.
+
+ncurses
+readline
+file
+vim
+openssl
+dropbear
+rsync
+curl
+solunar_cmdline
+andplay
+dbcmd
+kcalc
+kcrypt
+frotz
+glkterm (does not create a package, just builds a static library for glulxe)
+glulxe
+unrar
+make
+git
+gnuchess
+coreutils
+tar
+perl
+android-audio-sink
+espeak
+frobtads
+python
+zsh
+bash
+
+

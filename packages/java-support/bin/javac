@@ -1,0 +1,3 @@
+#!/bin/bash
+dalvikvm -cp /usr/share/java-support/tools.dex com.sun.tools.javac.Main "$@"
+

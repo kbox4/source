@@ -1,0 +1,5 @@
+This directory contains a tarball of the unzip source code, which is unsatisfactory.
+However, later versions (that 2009) of unzip60 don't build using the Google Android
+NDK, because they require the iconv library. Conceivably we might base a build on the
+old MSDOS makefile or something like that, but it seemed an awful lot of work for
+a minor component of the system.

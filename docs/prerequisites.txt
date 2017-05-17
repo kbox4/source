@@ -1,0 +1,27 @@
+Building the complete KBOX distribution requires a positively huge amount of software on
+the build machine. To make matters worse, some packages can only be built if the
+corresponding software _with the same version_ is present on the build machine. "file"
+and "python" (Python 3), at least, fall into this category -- they both bootstrap
+themselves using an existing installation.
+
+It is impossible to list the requirements for the build of every package, so here
+is the list for the complete system (so far as I am able to determine it); most
+of these have their own dependencies, which I haven't listed.
+
+flex 
+bison 
+curl 
+wget 
+makeinfo 
+make 
+a properly-configure Android NDK with stand-alone toolchain created
+perl
+xz
+file
+diff 
+patch
+texinfo and its dependencies
+gcc/g++ (for the host machine. This is in addition to the NDK)
+
+
+

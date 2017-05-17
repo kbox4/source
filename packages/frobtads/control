@@ -1,0 +1,7 @@
+Package: frobtads
+Version: %VERSION%
+Section: games
+Priority: optional
+Architecture: %ARCH%
+Depends: ncurses,curl
+Description: An interpreter for TADS2/TADS3 interactive fiction games. 

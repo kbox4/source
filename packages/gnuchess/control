@@ -1,0 +1,7 @@
+Package: gnuchess
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The GNU chess engine. In most cases, this needs to be used with a front-end program, such as cboard. 

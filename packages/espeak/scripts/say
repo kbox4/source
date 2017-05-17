@@ -1,0 +1,9 @@
+#/bin/bash
+pad=" "
+line=""
+for arg in "$@"
+do
+  line=${line}${pad}${arg}
+done
+echo $line
+espeak -w stdout "$line" | android-audio-sink

@@ -1,0 +1,8 @@
+86c86
+< LIBS1=-lstdc++ $(LIB_AUDIO) -lpthread $(EXTRA_LIBS)
+---
+> LIBS1=-lstdc++ $(LIB_AUDIO)  $(EXTRA_LIBS)
+90c90
+< LIBS2=-lstdc++ $(LIB_AUDIO) -lpthread
+---
+> LIBS2=-lstdc++ $(LIB_AUDIO) 

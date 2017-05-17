@@ -1,0 +1,7 @@
+Package: epub2txt
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: Extracts text from EPUB documents. See http://kevinboone.net/README_epub2txt.html for more information. 

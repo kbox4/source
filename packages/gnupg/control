@@ -1,0 +1,7 @@
+Package: gnupg
+Version: %VERSION%
+Section: security
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: GNU Privacy Guard -- encryption and key management utility. 

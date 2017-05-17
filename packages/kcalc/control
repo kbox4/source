@@ -1,0 +1,7 @@
+Package: kcalc
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends: readline
+Description: A command-line calculator, based on Lua.

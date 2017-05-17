@@ -1,0 +1,7 @@
+Package: file
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:
+Description: A command-line utility to guess the contents of a file. 

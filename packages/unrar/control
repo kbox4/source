@@ -1,0 +1,7 @@
+Package: unrar
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A decompressor and extractor for files with RAR compression. 

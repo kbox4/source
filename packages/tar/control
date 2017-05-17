@@ -1,0 +1,7 @@
+Package: tar
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The GNU tar utility. This offers more functionality that the Busybox version, and replaces it on installation. It will pipe compressed archives into and output gzip, bzip2, etc., if these other utilities are available.

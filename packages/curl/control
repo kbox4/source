@@ -1,0 +1,7 @@
+Package: curl
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends: 
+Description: A utility for downloading files using HTTP(S) and other protocols.

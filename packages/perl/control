@@ -1,0 +1,7 @@
+Package: perl
+Version: %VERSION%
+Section: development
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The Perl interpreter and runtime environment. 

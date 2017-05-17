@@ -1,0 +1,7 @@
+Package: dbcmd
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends: curl
+Description: A simple command-line utility for synchronizing files with the Dropbox server. For more information see http://kevinboone.net/README_dbcmd.html.

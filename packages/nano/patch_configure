@@ -1,0 +1,6 @@
+34333,34334c34333,34334
+<     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ncursesw\""; } >&5
+<   ($PKG_CONFIG --exists --print-errors "ncursesw") 2>&5
+---
+>     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ncurseswNONONO\""; } >&5
+>   ($PKG_CONFIG --exists --print-errors "ncurseswNONONO") 2>&5

@@ -1,0 +1,7 @@
+Package: andplay
+Version: %VERSION%
+Section: media
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A command-line audio player.

@@ -1,0 +1,8 @@
+Package: android-audio-sink
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A helper for audio playback from the command line -- used by some KBOX utilities that play audio. At present, the Android C API has no access to the audio hardware, so we need a helper to make the necessary OpenSLES API calls for audio.
+ 

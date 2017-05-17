@@ -1,0 +1,7 @@
+Package: vim
+Version: %VERSION%
+Section: editors
+Priority: optional
+Architecture: %ARCH%
+Depends: ncurses
+Description: A text editor. 

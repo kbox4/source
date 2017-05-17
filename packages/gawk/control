@@ -1,0 +1,7 @@
+Package: gawk
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The AWK text processing programming language. This implementation replaces the Busybox version.

@@ -1,0 +1,321 @@
+<a href="software.html">&bull; Software</a>&nbsp;
+<a href="kbox3.html">&bull; The KBOX3 project</a><br/>
+<p/>
+
+<img src="kbox_logo.gif" align="left" alt="KBOX logo" hspace="20"/>
+<h1>KBOX3 development diary</h1>
+<br clear="all"/>
+<p/>
+For comments and general information on the previous version of
+KBOX, KBOX2, please see <a href="kbox2_diary.html">here</a>
+
+<h2>April 2017</h2>
+
+I can hardly believe that it has been two years since my last update. 
+I guess KBOX3 is about as stable as it's likely to get, and most of
+the command-line utilities that make any sense to run on an Android
+platform, that can be ported, have been ported. There are a few things
+that I wanted to port, but have proven to be impractical. Top of
+my personal list of failures is the <code>gdrive</code> command-line
+client for Google Drive. It would be very useful to be able to 
+synchronize certain GD directories to KBOX3. Alas, no: <code>gdrive</code>
+is written in the "Go" language. I was able to build Go applications for
+Android, but unfortunately the Go runtime bypasses libc/Bionic completely,
+and does it's own low-level system traps. I'm sure there's a good
+reason for that, although I'm darned if I can see what it is. Whatever
+the reason, working this way completely circumvents KBOX's filesystem
+layer, and tries to work directly on the Android filesystem. I don't
+see the Go maintainers changing things completely to suit me so,
+for now, Go is, um... stopped. And <code>gdrive</code> with it.
+<p/>
+What's gotten me interested in KBOX again is discoverying that it is
+now possible to run Android apps on Chromebooks. I own a couple
+of these, and I've only just realized. There are ways to run full-scale
+Linux apps on Chromebooks, but the less invasive approach of
+KBOX might suit some niche uses. For more information on how
+this works, and why it might be useful, see  
+<a href="kbox_chromebook.html">this article</a>.
+<p/>
+Right now, the thing that most obviously limits the usefulness
+of KBOX on Chromebooks is that the Android emulator has no
+access at all the the Chromebook SD slot. The Chromebook
+<code>Download</code> directory -- which is just about the only
+place that local files can be stored -- <i>is</i> accessible:
+it is mounted at <code>/sdcard/Download</code> in the 
+Android (and KBOX) filesystems. So there is a place to
+exchange files between Chrome and Android, but it's 
+considered to be a transient storage, and never very 
+extensive.
+<p/>
+There are rumours on various forums that proper SD card
+support is in the works, but I'm not holding my 
+breath.
+<p/>
+Since most Chromebooks use x86 hardware, this has prompted
+me to consider an x86 version of KBOX3, something I
+had previously not wanted to take on. Experimentally, it
+does seem to be possible -- I have made the base system and
+a couple of packages work. However, porting the big, complex
+applications like <code>gcc</code> and Perl is going to
+take a substantial effort, and not something I want to take
+on unless there is a lot of interest.
+
+
+<h2>July 2015</h2>
+
+<a name="2015_07_31"></a>
+<h3>July 31</h3> 
+
+Despite my previous pessimism, KBOX3 <i>does</i> work on (at least some)
+64-bit Android devices. I guess that I've become so used to Google
+repeatedly changing Android in ways that break KBOX, I was too quick to
+jump to the assumption that they had done so again. However, it
+turns out this time to be a "d'oh!" moment on my part.
+<p/>
+In some shell scripts I had specified the interpreter like this:
+<p/>
+<pre class="codeblock">
+#!/system/bin/sh
+</pre>
+when the usual formula is:
+<pre class="codeblock">
+#!/bin/sh
+</pre>
+
+This was a hangover from the very early days of KBOX, when the reference
+to the Android shell in <code>/system/bin</code> was necessary. It has
+not been necessary for several years, but I hadn't quite gotten out of the
+habit of using it. Refering to the Android shell wasn't a problem on
+32-bit devices, but on a 64-bit Android the stock shell is a 64-bit
+binary, and everything in KBOX is 32-bit. So when we try to load the
+<code>libfakechroot.so</code> library into the process, it fails because
+the bit-widths don't match.
+<p/>
+This problem only affects packages that use shell scripts, and I've been
+through the whole distribution and (I hope) fixed all such scripts. I have
+uploaded corrected versions of the broken packages to my downloads page.
+However, it's possible that I have missed some scripts, so do please let
+me know if you get errors about not being able to load a 32-bit library
+into a 64-bit process, and I'll try to fix them.
+<p/>
+As a side note, KBOX3 only works on 64-bit Android devices because 
+the platform provides some measure of 32-bit backward compatibility. Although
+it would be possible, in principle, to rebuild the whole of 
+KBOX3 to be 64-bit-clean, I can see no benefit at all in doing so
+
+
+<a name="2015_07_29"></a>
+<h3>July 29</h3> 
+
+<strike>
+<b>KBOX3 does not currently work on any 64-bit Android device</b>. 
+Yep, Google has found
+another way to stop KBOX working, although I doubt it was intentional.
+On a 64-bit device, even if the KBOX shell starts up, attempting to run
+any program will result an error message of this form:
+
+<pre>
+CANNOT LINK EXECUTABLE DEPENDENCIES: 
+"/data/data/jackpal.androidterm/kbox3/lib/libfakechroot.so" is 32-bit instead of 64-bit
+</pre>
+
+And, because <code>libfakechroot.so</code> is not loaded, the whole operating
+basis of KBOX is undermined. This library is used to fake the Linux-like
+filesystem on top of the Android filesystem that all KBOX executables
+depend on.
+<p/>
+At present, this means that KBOX3 won't work on the HTC One M8S and M8,
+the Nexus 9, and the Samsung Galaxy S6, and a few other devices. 
+However, it seems
+likely that more vendors will move to a 64-bit version of Android 5
+in future, and this could well spell the end for KBOX. On a side note,
+I suspect that the move to 64-bit is to take advantage of the newer
+ARMv8 architecture, not because any Android app is likely to need a
+64-bit address space.
+<p/>
+The odd thing is that <code>libfakechroot.so</code> is indeed a
+32-bit executable, as is everything else in KBOX3. I can't for 
+the life of me understand why Android thinks this library ought 
+to be 64-bit, when
+it is being preloaded into a 32-bit application. Of course, there are
+a great many things about Android that I don't understand. In principle,
+I could build a 64-bit version of <code>libfakechroot.so</code>, but
+I can't think of any reason for it to work with 32-bit code.
+<p/>
+The truly bizarre thing, however, is that the KBOX shell starts up at
+all, given this problem. It seems that it does start, and it finds files
+where they should be, which means that <code>libfakechroot.so</code> is
+doing what it should. It's only when the shell tries to launch further
+executables that Android starts complaining about the library bit-width.
+<p/>
+I fear that the only solution is to rebuild the whole of KBOX as
+64-bit. Since I've only recently recovered from the pain of rebuilding
+it as position-independent to suit Android 5, that isn't a job I 
+intend to undertake for a long time, if ever.
+</strike>
+<p/>
+
+<a name="2015_07_01"></a>
+<h3>July 1</h3> 
+
+At long last, <code>gcc</code> is now available for KBOX3. The 
+package can be obtained from the Downloads page. This is an 
+early release and there could well still be problems. For
+more information, see <a href="kbox3_c.html">here</a>.
+
+
+<h2>June 2015</h2>
+
+
+<a name="2015_06_30"></a>
+<h3>June 30</h3>
+
+A lot of folks who have tried KBOX3 have found that the shell won't even
+start up, because of a reported missing <code>dlopen</code> symbol. 
+Support for the <code>dlopen()</code> function (for dynamically loading
+libraries) has been a serious nuisance throughout the whole of the KBOX
+project. Support for this function seems to vary from device to device
+in an unpredictable way. Unfortunately, I've never been able to reproduce
+the problem. 
+<p/> 
+I've recently had a contribution of a modified version of
+<code>libfakechroot.so</code>, which is known to make KBOX3 work on at least
+one Android 5 device.  I'm recommending that anybody who sees errors about
+missing <code>dlopen</code> download and install  <a
+href="libfakechroot_fix_dlopen_1.so">fixed version 1</a> of
+<code>libfakechroot.so</code>. Just copy this over the existing
+<code>libfakechroot.so</code> version in the <code>lib</code> directory. 
+<p/>
+I've called this 'fixed version 1' because I can't be sure that other modified
+versions won't be needed for other systems, unfortunately. 
+<p/>
+On a more positive note, I've had a new build of GCC from Cyd Haselton which
+should restore C compiler support to KBOX3, much missed until now. I was
+unable to build GCC on my desktop workstation in a way that worked on
+Android 5 (because of the position-independent binary requirements, among
+other things). The trick -- which I confess I would not have thought 
+of myself -- was to build GCC <i>on the device</i> under Android 4.4, 
+which did not have these restrictions. I'm still working on getting this 
+new build packaged up for distribution, but it's looking promising so far.
+
+
+<h2>March 2015</h2>
+
+<a name="2015_03_04"></a>
+<h3>March 4</h3>
+
+I've released a first attempt at some utilities to support building
+Java applications directly on the Android device. For more
+information, see <a href="kbox3_java.html">here</a>.
+
+<a name="2015_03_03"></a>
+<h3>March 3</h3>
+
+I've built gnuchess for KBOX3, which was straightforward. I was hoping
+to build the ncurses interface 'cboard' but, alas, the source is full of
+wide-character functions that have no implementation in Android Bionic.
+These problems might be surmountable, if there's enough demand for this
+to make it worth the effort.
+
+
+<a name="2015_03_02"></a>
+<h3>March 2</h3>
+
+Python 3 is now working on KBOX3. The problem, as so often that case with
+Android 5, was figuring out how to specify all the necessary compiler/linker
+switches in the rather complicated build system. Python modules are built
+as shared objects -- it should be possible, in principle to link them
+statically to the main executable, but that didn't work for me at all
+-- and the linker needs these binaries' dependencies 
+(e.g., <code>-lm</code>) specified
+explicitly, even though they are specified on the
+main executable. Since the Python build system does not do this without a good
+deal of fiddling, I assume that's not something that is necessary with
+desktop Linux. 
+
+<a name="2015_03_01"></a>
+<h3>March 1</h3>
+
+I managed to build the latest (at this time) version of Perl -- 5.20.2. 
+I made use of Alex Suylok's cross-compiler patch for Perl, because 
+building Perl is a real bear otherwise. I can't begin to understand why
+building Perl needs to be quite the nightmare that it is, but there are
+many things I don't understand, so nobody should be surprised by that.
+For KBOX2 I unpacked the Perl binaries from Google's Android Scripting
+tools, but these don't work on Android 5, so I had to build from scratch.
+I've only run simple tests, and I have no idea how this build of Perl
+will perform with anything that involves dynamic loading (but I can guess
+it won't be an unmitigated success.) Still, for routine stuff it seems
+fine.
+
+
+<h2>February 2015</h2>
+
+<a name="2015_02_28"></a>
+<h3>February 28</h3>
+
+I've managed to port Git (code repository management utility) to KBOX3.
+The problem, as it so often is, was figuring out to get the appropriate
+compiler switches and library references into Git's complicated
+configuration system. I've only tested with basic pull and push operations,
+which seem to work fine, including with <code>https:</code>. However,
+I have not included any CA certificates in the package, so operations
+that work over SSL need to have <code>GIT_SSL_NO_VERIFY=1</code> defined
+in the environment. Since a growing number of utilities need CA 
+certificates, perhaps a better approach would be provide them in a
+separate package, and build these utilities so they look in the appropriate
+directory?
+
+
+<a name="2015_02_27"></a>
+<h3>February 27</h3>
+
+Work on support for Android 5 has started at last. Because the differences
+are so substantial, I've decided to start a whole new project -- KBOX3 --
+and retire KBOX2. Supporting one Linux distribution single-handed in 
+my spare time is difficult enough; two would be a nightmare. I
+don't know to what extent KBOX3 will work with Android versions 
+prior to 5, but I'm not aiming to support them, nor old hardware. KBOX2
+will remain available, in its current form, for the forseeable future. 
+<p/>
+Porting Linux applications to run under Android 5 is no easier 
+than porting them to Android 3-4 was. KBOX3 takes the same basic
+approach, of providing a virtual filesystem that looks like a
+normal root filesystem. However, there are now even more restrictions
+on access to system files and devices, along with the absurd and
+demoralizing requirement to build everything in position-independent code.
+At the time of writing, even Google's own builds of scripting languages
+like Perl and Lua remain disfunctional on Android 5, and there's no
+indication that this will change any time soon.
+<p/>
+The situation has been worsened by the fact that later versions of
+the Google Android NDK -- which are required for Android 5 -- have even
+more bits missing than previous versions. In some cases, where the problems
+are justing missing header files, I've been able to fix the problems just
+by copying in the missing bits from a previous release. However, a number
+of standard C library calls that were just useless stubs in the old versions
+of Android Bionic are now missing altogether. In a sense that's a good thing
+-- it's surely better that something fail to build, than that it builds and
+then fails in use. But despite the missing code, most of the packages I
+built for KBOX2 did seem to work, and considerable changes are sometimes
+required to replace the functionality that has been removed, even with
+useless stubs.
+<p/>
+A particularly irritating finding with Android 5 is that there are some
+functions defined in the NDK that don't exist in the actual on-device
+Bionic implementation. Some packages that rely on auto-configuration to 
+probe the compiler to find what it offers can fail, because
+the generated code contains referencs to missing functions.
+<p/>
+All in all, a horrible job made more horrible. Still, the packages
+that I started KBOX to use -- Busybox, Dropbear, and Vim -- are
+all working, as are about 80% of the other stuff from KBOX2. The
+big, complex packages like Perl and gcc are currently not available
+and, as they were contributed by other people -- all of whom are
+volunteers as I am -- I don't know when that situation will change.
+ 
+
+
+
+
+

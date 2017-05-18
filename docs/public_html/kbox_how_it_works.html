@@ -1,0 +1,164 @@
+<h1>KBOX -- how it works</h1>
+
+To run console-mode Linux utilities on Android you need, as a minimum,
+a terminal emulator and a Linux
+shell. Android itself provides a (very rudimentary) shell, 
+and a number of terminal emulators are available
+from the Android Market, and elsewhere. Unfortunately, on a non-rooted
+Android system, a terminal emulator and a shell on their own won't 
+allow you do
+do very much. In principle it ought to be possible to compile and
+install other Linux utilities, and run them within the terminal
+emulator, but even that is difficult. This process, and the 
+associated problems, are discussed 
+<a href="http://kevinboone.net/android_native.html"> here</a>.
+<p/>
+Fundamentally, as an unprivileged (non-root) user on Android, you have 
+very limited
+write access to anything in the root filesystem, and somewhat limited read 
+access. It's impossible to install Linux utilities in the usual places, 
+even if they can be compiled. That is, you can't put binaries
+in <code>/bin</code>, or configuration files in <code>/etc</code>, or
+<code>man</code> pages in <code>/usr/share/man</code>. In fact, these
+directories don't even exist on Android, and can't be created. Many Linux
+utilties make assumptions about the filesystem layout, and these assumptions
+will frequently be violated. 
+<p/>
+It might be thought that we could install Linux software in the SD 
+card directory,
+which is <code>/sdcard</code> as seen from the terminal
+emulator. This directory is writeable
+by any app the requests the necessary privilege at install time but,
+irritatingly, it is mounted so as to make it impossible to assign
+execute permissions to any file. Without root access, we can't change
+the way the mount is configured, which makes the SD card directory unsuitable
+for installing software. An additional complication -- albeit not so
+significant -- is that it isn't possible to create symbolic links
+within the SD card filesystem.
+<p/>
+What KBOX does is to construct a minimal, but complete, Linux root
+filesystem in one of the few locations that is both writable, and
+can have execute permissions -- the private data area of the 
+hosting Android terminal emulator app. I should point out that KBOX
+does not include a terminal emulator -- it is a set of utilities and
+libraries that are intended to be added to an existing terminal
+emulator installation.
+Different terminal emulators have
+their data directory in different places and, in general, there is no way
+to find out from the system or the app where that is. It will be a subdirectory
+of the directory <code>/data/data</code>, but this directory lacks
+search permissions (thanks, Google), so you can't query it. In all
+the Android versions I've seen, however, the relevant subdirectory has a
+name the same as the terminal app's package name. That name -- the
+package name -- is also
+not guessable or searchable, but the developer of the 
+terminal app will know --
+it's in the AndroidManfifest.xml file that defines the app's contents.
+For Jack Palevich's terminal emulator -- which is the one I've tested
+most thoroughly -- the package name is <code>jackpal.androidterm</code>,
+so the writable directory is <code>/data/data/jackpal.androidterm</code>.
+<p/>
+The KBOX installer expects to be run from the writable
+directory of the hosting terminal emulator. In that directory 
+it creates the 
+subdirectory <code>kbox3</code>, and
+unpacks the base distribution into it. That base distribution consists
+of a relatively complete build of Busybox, plus some other widely
+used libraries. In particular, it includes the <code>libfakechroot.so</code>
+library, which we'll get to shortly.
+<p/>
+Some parts of the basic root filesystem can't be created 
+by the installer, because they are generated on the fly by the kernel. 
+Particular
+examples are <code>/proc</code> and <code>/dev</code>. So the KBOX intaller
+creates symlinks to these locations under <code>kbox3</code>.
+<p/>
+Consequently, the contents of the <code>kbox3</code> directory looks
+rather like a complete Linux filesystem, with its own <code>/bin</code>,
+<code>/etc</code>, and so on. If we could run <code>chroot</code> on 
+this directory, we could have the illusion of a real root filesystem.
+<p/>
+Sadly, we can't. <code>chroot</code> is not available to unprivilged users.
+What we have to do is to interpose the <code>libfakechroot.so</code> 
+library between shell (and any process spawned by the shell) and the
+C library that does low-level operations. The LD_PRELOAD environment
+variable has that effect. By preloading <code>libfakechroot</code>,
+all filesystem operations are filtered, and the pathnames specified
+by the application replaced with pathnames in the 'real' Android
+filesystem. So, for example, a C function call like this:
+
+<pre class="codeblock">
+open ("/etc/myfile.rc", O_RDONLY);
+</pre>
+
+is transparently translated into:
+
+<pre class="codeblock">
+open ("/data/data/jackpal.androidterm/kbox3/etc/myfile.rc", O_RDONLY);
+</pre>
+
+<code>libfakechroot</code> is pretty complex, because <i>every</i> low-level
+call that can take or return a pathname has to be translated in
+this way. However, adopting this approach makes it easier to port
+applications to run under KBOX, because applications do not have to
+be modified to account for the unconventional filesystem layout of
+Android.
+<p/>
+As its last step, the KBOX installer creates a wrapper for the
+Busybox shell, called <code>./kbox3/bin/kbox_shell</code>. This wrapper
+is dynamically generated, because it contains the pathnames of 
+KBOX components supplied by the installer, which would otherwise 
+have to be worked
+out at runtime. The wrapper sets up a whole bunch of environment variables,
+then runs the Busybox shell <code>./kbox3/bin/sh</code> in such a way
+as to preload <code>libfakechroot</code>. Thereafter, any app spawned by the
+shell will preload this library, and see the same 'virtual' root filesystem.
+<p/>
+Installing KBOX using a terminal emulator app does not reconfigure the app
+in any way. The KBOX filesystem is only virtualized when running the
+KBOX shell. Therefore, it is probably useful to set the terminal app
+to launch <code>kbox_shell</code> (using its full path in the Android root
+filesytem), rather than its default, which is 
+probably <code>/system/bin/sh</code>.
+<p/>
+The <code>libfakechroot</code> library automatically excludes symbolic
+links from the virtual filesystem. So, in order to get access to
+the underlying Android filesystem, the KBOX installer creates a 
+symlink called <code>/android_root</code> that points to the real
+Android filesystem. In addition, for the sake of convenicence it
+creates links to <code>/sdcard</code> and <code>/storage</code>. 
+<p/>
+The entire KBOX distribution is thus contained inside the terminal
+emulator app. Any files that are created using its utilties are
+owned by the same user ID that owns the terminal emulator app.
+Uninstalling the terminal app will therefore uninstall the whole of
+the KBOX system -- including the user home directory, which appears
+as <code>/home/kbox</code> (this isn't its real location, of course).
+I recommend, therefore, that important stuff isn't kept in this
+location -- it is better to use the <code>/sdcard</code> for
+this, because files created here will survive an uninstallation
+of the host terminal emulator. 
+<p/>
+Using <code>libfakechroot</code> to virtualize a root filesystem is
+a bit of a hack, to be honest, and its weaknesses are easily exposed.
+Most obviously, it will only filter <i>dynamic</i> calls to the Bionic C
+library (because that was the C library it itself is linked against). 
+If you link a program with a different C library (<code>glibc</code>,
+for example), you would have to revert to hard-coding file locations
+to match the Android layout. The same is true if you statically
+link an application against the C library, because calls never
+go through the LD_PRELOAD mechanism. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

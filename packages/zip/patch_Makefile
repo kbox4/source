@@ -1,0 +1,20 @@
+62c62
+< LFLAGS1 =
+---
+> LFLAGS1 = -pie
+128c128
+< 	$(BIND) -o zip$E $(LFLAGS1) $(OBJZ) $(OBJI) $(OBJA) $(LFLAGS2)
+---
+> 	$(BIND) -pie -s -o zip$E $(LFLAGS1) $(OBJZ) $(OBJI) $(OBJA) $(LFLAGS2)
+130c130
+< 	$(BIND) -o zipnote$E $(LFLAGS1) $(OBJN) $(LFLAGS2)
+---
+> 	$(BIND) -pie -s -o zipnote$E $(LFLAGS1) $(OBJN) $(LFLAGS2)
+132c132
+< 	$(BIND) -o zipcloak$E $(LFLAGS1) $(OBJC) $(LFLAGS2)
+---
+> 	$(BIND) -pie -s -o zipcloak$E $(LFLAGS1) $(OBJC) $(LFLAGS2)
+134c134
+< 	$(BIND) -o zipsplit$E $(LFLAGS1) $(OBJS) $(LFLAGS2)
+---
+> 	$(BIND) -pie -s -o zipsplit$E $(LFLAGS1) $(OBJS) $(LFLAGS2)

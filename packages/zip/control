@@ -1,0 +1,7 @@
+Package: zip
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A file compression utility. The corresponding unzip is built into Busybox, so does not have to be installed separately.

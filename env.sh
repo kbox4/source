@@ -27,7 +27,8 @@ STAGING=/home/kevin/lib/kbox4_staging/
 # Where to put the built binaries and packages
 DIST=/home/kevin/lib/kbox4_dist/
 
-# The value of the "arch" attribute, to put in .deb packages
+# The value of the "arch" attribute, to put in .deb packages, etc. Not used
+#  in build configuration (see CONFIG_HOST)
 DEB_ARCH=arm
 
 # These settings are passed as the --host and --build switches of configure scripts

@@ -1,0 +1,77 @@
+<h1>KBOX limitations and known bugs</h1>
+
+KBOX is (always) a work in progress. There are some known bugs, which may at
+some point be fixed. There are, however, some fundamental limitations which
+can probably never be fixed, because Android is what it is. I am
+in the process of moving the known bugs to the github repository --
+please bear with me.
+
+<h2>KBOX is a single-user system</h2>
+
+Like Android (essentially), KBOX is a single user-system. Within
+the KBOX shell there is no concept of login or user credentials. All files
+are owned by the same user -- the user that owns the terminal emulator.
+The user ID is itself aribtrary -- a sequence of numbers with no particular
+meaning -- so it is nearly always necessary to specify a user ID
+explicitly when using utilities that expect one. Any utility that
+expects users to authenticate themslves will likely struggle, although
+the <code>kbox-login</code> package provides a stub implementation
+of <code>/bin/login</code> that can help in some situations.
+
+<h2>The Android C library lacks multi-byte character support</h2>
+
+A number of applications that now support multi-byte characters have
+had to be built with that support disabled, because the Android
+C library does not provide the necessary infrastructure.
+
+<h2>Screen width and height will be different from a desktop system</h2>
+
+Many Linux utilities are intended to work with a console 80 characters wide and
+25 lines high. Even though the days of dumb terminals are long gone, a
+lot of Linux/Unix software originates from those days. It's quite
+difficult to get a display 80 columns wide on a small-screen device, and
+still be able to read the text without a magnifying glass. Many utilties
+provide a way to specify the width of the console; for
+example, <code>frotz</code> takes a <code>-w NN</code> switch for this
+purpose. A few (very few) utilities can work out the console size using
+the <code>ncurses</code> library. Some utilities are hard-coded to
+generate 80-column output, and there's no real way to change this
+behaviour without modifying the code.
+<p/>
+To make matters worse, the width and height of the console in characters
+will change if you change the font size used by the Android terminal
+emulator. 
+<p/>
+This is a general problem of running console-based software on a device
+that was never really intended for such a mode of operation. 10" tablets
+behave better in this respect than cellphones.
+
+<h2>Android is firewalled</h2>
+
+Android does not readily allow incoming connections, and the firewall
+settings cannot be changed by a non-root user. So, although KBOX
+provides SSH and rsync servers, you might not be able to connect 
+to these services from outside the device. This behaviour varies
+from vendor to vendor. In some cases, a workaround is to make a 
+connection from the Android device to the host that will be
+initiating the network connection to the device. This may have the 
+effect of relaxing the firewall for that particular client/server
+combination. However, this is fundamentally a restriction of
+Android, and not one that is easy to work around.
+
+<h2>Many networking utilities default to using port numbers in 
+the 1-1024 range</h2>
+
+These ports are not available to unprivileged users. This means that even
+if you can run an <code>ssh</code> server without being blocked by the
+firewall (see above), you'll need to tell both the client and the server
+to use a port other than the default of 22. This applies to most
+other network daemons also. As a user, you will at least have to
+assign non-default port numbers to some utilties.
+
+<h2>OpenSSL issues</h2>
+
+The move from OpenSSL to BoringSSL in Android has caused a heap of problems,
+too numerous to list here.
+
+

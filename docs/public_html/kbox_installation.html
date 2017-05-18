@@ -1,0 +1,217 @@
+<h1>KBOX4 installation instructions</h1>
+
+Installing KBOX4 is, I hope, relatively straightforward. However, I am
+no longer providing a version of KBOX that is bundled with a terminal
+emulator -- this is just too much work, and it didn't work with
+Android versions after 4.1 anyway (thanks, Google). To install KBOX4
+does require a willingness to work with Linux commands; but I'm assuming
+that anybody who wants to run a complete Linux distribution on
+an Android handset is happy to do that.
+<br clear="all"/>
+
+<h2>Before you start</h2>
+
+PLEASE READ THIS!
+<p/>
+It should be possible to install KBOX4 with any Android terminal emulator
+app, on any device with Android version later than 5.0. Earlier versions
+might work, but there has been little testing. 
+<p/>
+To install at all, you must first identify a filesystem location to which 
+the terminal
+emulator can write files, and which supports the setting of
+execute attributes on files. This immediately rules out the SD card,
+either internal or external, because these file areas are mounted with
+exec permission disabled (thanks Google). Android is so locked down that
+there are relatively few places you can install a complete Linux
+distribution (!). The best place to install
+KBOX4 is in the terminal emulator's own data area. This will vary from
+app to app, but will usually be <code>/data/data/[package_name]</code>.
+The package name is unlikely to be something you can guess -- it's something
+the developer will have assigned. For Jack Palevich's terminal,
+the writeable data area is at the following place:
+
+<pre class="codeblock">
+/data/data/jackpal.androidterm
+</pre>
+
+At present the installer won't stop you installing in an
+unsuitable directory; you might get a bunch of error messages, but
+most likely it will install and then nothing will work. In short,
+whatever terminal emulator you use, ensure that you know where its
+writeable data area is, and use that for the installation.
+In the following instructions, I assume that you're using Jack Palevich's
+terminal emulator, and installing in the directory shown above.
+ 
+
+<h2>Installing the base system</h2>
+
+The base system provides Busybox (including the package manager),
+and the libraries that provide the virtual root filesystem.
+Installation is somewhat automated, but there are a number of manual
+steps. Full automation is almost very difficult, because Android Linux
+offers only a woefully small selection of utilities -- there wasn't
+even a working <code>cp</code> command, for example, until quite
+recentlly.
+</p>
+1. <b>Download the base system installer</b> 
+that matches your architecture to your Android device (see
+the <a href="kbox_downloads.html">downloads</a> page). 
+You can do this using the built-in browser, or
+download using a desktop computer and then copy to the device. It's 
+important that you know what directory the downloaded file is in, 
+as seen from the Android terminal emulator. If you download using the
+built-in browser, the download directory is probably
+
+<pre>
+/sdcard/Download
+</pre> 
+
+However, if you've installed an external SD card, it might have been
+changed to
+
+<pre>
+/storage/extSdCard/Download
+</pre> 
+
+particularly on Samsung devices. 
+I will assume that the file is in <code>/sdcard/Download</code>; adjust
+as appropriate if not. Ultimately, your goal is to get this file to
+some directory where you can assign execute permission to it -- you
+can't do that on the SD card.
+<p/>
+2. <b>Start the terminal emulator</b>. Install one first if you haven't
+already.
+Again, I'm assuming that you're using Jack Palevich's terminal emulator,
+but others should work. You might find that you need to adjust some
+settings in the terminal app, particularly the font size.
+<p/>
+3. In the terminal emulator, <b>change to the writable data area</b>
+for the terminal app.
+
+<pre class="codeblock">
+$ cd /data/data/jackpal.androidterm
+</pre>
+
+<p/>
+
+4. <b>Copy the base installer</b> to the writeable data area. Many 
+Android versions don't have a working <code>cp</code> command, so
+you'll need to use <code>cat</code> to do this:
+
+<pre class="codeblock">
+$ cat /sdcard/Download/kbox4-install-base-arm &gt; kbox4-install-base
+</pre>
+
+(for ARM achitecture; adjust if necessary).
+
+<p/>
+
+5. <b>Set execute permission on the installer</b>:
+
+<pre class="codeblock">
+$ chmod 755 kbox4-install-base
+</pre>
+
+<p/>
+
+6. <b>Run the installer</b> 
+
+<pre class="codeblock">
+$ ./kbox4-install-base
+</pre>
+
+The installer will first explode a bunch of files into a 
+temporary directory called <code>kbox4-base-installer</code>.
+Then it will prompt whether to run the installation script 
+<code>install.sh</code>. You need to say 'yes' here, if it isn't obvious. 
+The installation script kicks of a series of steps that create the
+<code>kbox4</code> directory and
+build the KBOX4 filesystem in that directory.
+<p/>
+Note that the full path to the KBOX4 shell is displayed if the
+installer completes successfully.
+You'll see something like:
+
+<pre class="codeblock">
+The full path of the KBOX4 shell is /data/data/jackpal.androidterm/kbox4/bin/kbox_shell
+</pre>
+
+The installer creates the directory <code>kbox4</code> in whichever directory
+it is run from, and that is the directory that will become the 
+virtual root filesystem from within the KBOX shell.
+<p/>
+
+7. <b>Test the KBOX shell</b>, by running it using the path displayed in
+the previous step.
+
+<pre class="codeblock">
+$ /data/data/jackpal.androidterm/kbox4/bin/kbox_shell
+</pre>
+
+Prompt should change to 'kbox$'. Running
+
+<pre class="codeblock">
+kbox$ pwd
+</pre>
+
+should show the current directory as <code>/home/kbox</code>,
+and <code>ls /</code> should show a unix-like root filesystem.
+<p/>
+Exit the shell by typing <code>exit</code> or pressing Ctrl+D
+<p/>
+8. (Optional) delete the installer 
+<code>kbox4-base-installer</code>. 
+
+<p/>
+9. <b>Configure the terminal emulator to run the KBOX shell by default</b>.
+This is an optional step, but it greatly increases the convenience
+of using KBOX. The mechanism to make this change depends on the terminal
+emulator. With Jack Palevich's Android Terminal Emulator, choose 
+Preferences from the main menu, then find the entry for Command Line.
+Replace <code>/system/bin/sh</code> with the full path to the KBOX
+shell, as displayed in step 6. <i>Caution is required</i>. If you
+make a mistake here, most likely the terminal emulator will not start
+up again, and you'll be faced with re-installing it, along with repeating
+all the steps described above.
+</p>
+After you have installed a different shell (Bash, for example), you might
+prefer to have that shell start with the terminal emulator, rather than
+the default Busybox. You can do that by adding the full path of the new 
+shell to the <code>kbox_shell</code> command, like this:
+
+<pre class="codeblock">
+kbox_shell -c /usr/bin/bash
+</pre>
+
+<h2>Installing packages</h2>
+
+KBOX4 packages are in <code>.deb</code> format, and have names of the
+form <code>xxx_kbox4_[architecture].deb</code>. 
+This format is used by other Linux
+distributions but, even if the KBOX installer can unpack them, 
+you can be sure they won't work.
+<p/>
+To install a package, first get it onto the Android device, perhaps
+by using the built-in Web browser. I'm assuming that downloads from
+the browser go to the directory <code>/sdcard/Download</code>.
+Then, from the KBOX shell:
+
+<pre class="codeblock">
+$ dpkg -i /sdcard/Download/{package}.deb
+</pre>
+
+If you get warnings about missing dependencies, but you're sure that
+you have installed any packages on which there are dependencies,
+over-ride the warnings by doing:
+
+<pre class="codeblock">
+$ dpkg -F depends -i /sdcard/Download/{package}.deb
+</pre>
+
+
+
+
+
+
+

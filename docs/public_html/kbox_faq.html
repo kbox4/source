@@ -1,0 +1,520 @@
+<h1>KBOX frequently-asked questions</h1>
+
+<h4>What is KBOX for?</h4>
+
+KBOX is a set of libraries, scripts, and utilties that allows experienced 
+Linux users to manage their Android devices from the command line,
+in a way that is more like a desktop Linux system.
+Its main goal is to obviate the hassle of
+rooting or modifying an Android device, just to be able to run 
+simple command-line tools. 
+Android is based on the Linux kernel, but
+only provides an impoverished set of utilities -- far from what a desktop
+Linux user would be used to. Terminal emulators are available for Android,
+and these provide a console environment; but on its own a terminal emulator
+is of limited use. KBOX3 provides utilties like <code>ssh</code>, <code
+>vim</code>, and Perl, to be used in conjuction with a terminal emulator.
+Because KBOX provides applications with a virtual filesystem that looks
+more like real Linux than the Android filesystem does, it is much
+easier to port Linux applications to KBOX3 than to native Android. 
+
+<h4>What Linux utilities does KBOX provide?</h4>
+
+As well as core Linux command-line utilies the following, more
+substantial, packages have been ported to KBOX3.
+<p/>
+
+<b>Development tools:</b> <code>gcc</code>, Perl, Python, Java
+<p/>
+<b>Math:</b> <code>bc</code>, <a href="README_kcalc.html">KCalc</a>
+<p/>
+<b>Networking:</b> Curl, Dropbear, ftp, Lynx, rsync, utelnetd 
+<p/>
+<b>Text processing:</b> groff, gawk 
+<p/>
+<b>Interactive fiction:</b> frotz, glulxe, frobtads 
+<p/>
+<b>Source management:</b> git 
+<p/>
+<b>Privacy/encryption:</b> GnuPG, <a href="README_kcrypt6.html">KCrypt</a>
+<p/>
+<b>Editors:</b> Vim, Nano 
+<p/>
+<b>Compression:</b> zip, unzip, unrar 
+<p/>
+For a full list, see the <a href="kbox_downloads.html">Downloads</a>
+page. Please note that not all utilities are avaibale for all
+device architectures.
+
+<h4>How is KBOX4 different from KBOX3?</h4>
+
+To the end user, there is little difference. The differences are in the 
+way that the code is build. I hope that the new build scheme will make
+it easier to support multiple device architectures. Most utilties have
+been updated since the KBOX3 release, but the updates are unlikely
+to be revolutionary. 
+
+<h4>What about even earlier versions?</h4>
+
+I'm assuming that there are no installations of KBOX(1) and KBOX2 still
+in use. These were pretty crude in comparison to the later versions.
+I used to maintain a version of KBOX that was integrated into a terminal
+emulator, but it was something of a chore.
+
+<h4>What does KBOX stand for? Is it connected with anything else called KBOX?</h4>
+KBOX originally stood for "Kevin's implementation of Busybox", because
+it grew out of my attempt to install Busybox on non-rooted Android device.
+These days, Busybox is just the start, but I have retained the name,
+since I have no imagination. KBOX is unconnected with anything else
+with the same name. There is at least one radio station called KBOX and,
+perhaps somewhat confusingly, the name is also used by a project to
+port Linux to Microsoft XBox. 
+
+<h4>How many people use KBOX?</h4>
+
+I don't have any way of knowing that. In 2013, the KBOX base system
+was downloaded from my web server about 12,000 times. How many of
+those downloads developed into regular use, I don't know. About a hundred
+people have so far contacted me to ask questions, so I guess the
+number of regular users is between a hundred and 12,000.
+
+
+<h4>Does this root (or otherwise modify) my device?</h4>
+
+Not at all. The whole purpose of KBOX is to provide a Linux-like
+command prompt environment on a completely stock Android device.
+It won't help you to root your device, even if you want to.
+
+<h4>Does running KBOX remove the need to root my device?</h4>
+
+That depends on why you might want to root it. KBOX removes the need
+to root your device simply to run an <code>ssh</code> client session, 
+or edit a file using <code>vim</code>; but it doesn't provide any system-level
+access. It won't allow you to install new kernel modules, or change the
+contents of the Android root filesystem.  
+
+<h4>Will KBOX run on a rooted Android device?</h4>
+
+Probably, but what would be the point? If you're rooted, you can install
+whatever you like, wherever you like.
+
+<h4>What devices/versions does KBOX run on?</h4>
+
+KBOX is designed to work with ARM CPU-based devices, running Android 
+version 5.0 ('Lollipop')
+and later. It might work with earlier Android versions, but 
+there has been little
+testing. The following, at least, have been reported to work:
+
+<ul>
+<li>Google Nexus 7 (2012), with Android 5.0.2</li>
+<li>Google Nexus 7 (2013), with Android 4.4.4</li>
+<li>Samsung Galaxy Tab 3, with Android 4.4.2</li>
+<li>Samsung Galaxy S3, with Android 4.4.2</li>
+<li>Samsung Galaxy Note 10.1 (2014), with Android 5.5.1</li>
+<li>ODroid XU, with Android 5.1</li>
+<li>Samsung Galaxy Alpha, with Android 4.4.4</li>
+<li>HTC One M8S, with Android 5.0.1 (M8 and M9 should also be OK)</li>
+<li>Sony Experia Z3 Compact, with Android 5.0.1</li>
+<li>Sony Experia Z1, with Android 4.4.4</li>
+<li>Asus C100P Chromebook, with Android 6.0</li>
+<li>Acer R13 Chromebook, with Android 6.0 (x86 build)</li>
+</ul>
+
+
+
+Bear in mind that most Linux utilities were designed (or were derived
+from utilities that were designed) to output to a screen with a width 
+of at least
+80 characters. Very small devices might not be very useable, even if KBOX
+runs on them, unless you have very good eyesight.
+
+
+<h4>What about 64-bit Android devices?</h4>
+
+Good question. Everything in KBOX3 is built for a 32-bit ARM or x86 . However,
+the small number of 64-bit devices I have tried (essentially the latest
+HTC offerings) do seem to provide good 32-bit compatibility support,
+and KBOX does seem to work on those devices.
+<p/>
+However, you won't be able to invoke any 64-bit utilities from the KBOX prompt.
+The reason for this is that KBOX needs to load the <code>libfakechroot.so</code> library into the process being executed, and (at least on the devices
+I have tried) you can't load a 32-bit library into a 64-bit process.
+<p/>
+That won't be a problem when running anything provided by KBOX3, but it will
+be a problem if you try to invoke system utilities; 
+even <code>/system/bin/sh</code> will fail (just by way of illustration; there
+should be no practical need to invoke the stock Android shell). 
+I suspect (but have
+not verified) that running Java utilities in KBOX will be problematic 
+on a 64-bit system, because we need to run the (64-bit) Android JVM
+to do this. There could conceivably other problems as well.
+<p/>
+I guess that one day I will have to bite the bullet and build a 
+64-bit version of KBOX, but that's a collossal task, and one
+that I won't undertake until it becomes absolutely essential.
+
+
+
+<h4>What does the KBOX base system provide?</h4>
+
+The base system provides Busybox (built to offer about 50 utilities), and
+some other fundamental utilities that most of the other packages depend
+on.
+
+<h4>Why is it so hard to do what KBOX does?</h4>
+
+People often e-mail me with questions like "Why does XXX not work properly?"
+or "Whey do I get error message YYY with Android 5.1 when I didn't
+get it with 5.0?" Occasionally -- and it is very, very occasional --
+somebody will e-mail me a rude message full of curse-words in capital
+letters because
+something didn't work as expected. That's fair enough, of course -- people
+are entitled to expect a better service from somebody who is working free-of-charge in his spare time. The problem is that I don't have any control 
+over Google. Android is not designed for running console utilities, and
+Google (I presume) doesn't give a damn whether they work or not. Every new
+release of Android breaks something in KBOX that I have to fix. I don't 
+suppose Google does this on purpose, although sometimes the changes are so
+mutton-headed that it certainly seems that way. Moreover, there is not
+the uniformity of hardware in the Android world that there is with, say,
+Apple or Blackberry mobile products, and Android device vendors 
+modify and extend the
+base Android system in all sorts of ways. Consequently, keeping KBOX
+working <i>at all</i> is an uphill struggle. That it should work
+flawlessly on all possible Android devices is an impossible
+dream. 
+
+
+<h4>How do I install KBOX?</h4>
+
+Essentially, copy the base system installer to your device, and run it.
+Then download whatever packages you need and use the <code>dpkg</code>
+utility to run them. For full instructions see the <a href="kbox_install.html">installation</a> page.
+
+
+<h4>How do I uninstall KBOX3?</h4>
+
+KBOX becomes part of the terminal emulator you install it with. Uninstalling
+the terminal emulator will remove KBOX and all files created with it.
+The exception is files created on the SD card (or external storage). These
+will survive uninstallation. Alternatively, just delete the <code>kbox4</code>
+directory using ordinary Linux commands in the terminal emulator.
+
+<h4>Can I install KBOX from the Android Market / Google Play?</h4>
+
+I will never be providing KBOX via Google Play, for two reasons.
+First, Google charges developers to upload apps, and 
+since I make no money from KBOX,
+I'm unwilling to make this expenditure. Second, KBOX isn't an app. It's 
+a bunch of files that are designed to be installed into an existing terminal
+emulator app. I used to distribute a version of Jack Palevich's terminal
+emulator that KBOX (version 1) built in, but this proved 
+too time-consuming to maintain.
+<p></p>
+A number of products are available, from Google Play and elsewhere, that
+do integrate some version of KBOX or another. Some of these are commercial, 
+or carry advertisements.
+The developers of these products have my full support, but I don't endorse
+any of them, because I haven't tried them. 
+
+<h4>Is KBOX connected with Debian?</h4>
+
+This question sometimes crops up because KBOX packages are distributed
+in <code>.deb</code> format. KBOX has no connection with any other
+Linux distribution; it uses Debian package format because Busybox
+has built-in support for that format, so I don't have to write another
+package manager.
+
+
+<h4>Can I install .deb packages from other repositories?</h4>
+
+This will almost certainly not work, even if KBOX can process the 
+package files. KBOX is designed to run code specifically compiled and linked 
+with Google's native-code development tools for Android.
+
+<h4>How does KBOX provide a root filesystem on an unrooted device?</h4>
+
+See the <a href="kbox_how_it_works.html">how it works</a> page.
+
+
+<h4>What is my user ID?</h4>
+
+Or "Why is my user ID so stupid?" Run <code>id</code> to find your
+user ID. Android is not a multi-user system (until 4.2 -- see below); 
+user IDs are used to 
+isolate apps, not users, from one another. Each app gets a user ID, which
+is typically a sequence number. In Android 4.2 and later, each app has
+a user ID comprised of the 'real' user ID (the login ID) <i>plus</i>
+a sequence number; but it's still one-user-ID-per-app. There's no
+straightforward way to make the user ID look sensible within the KBOX
+shell, without breaking something somewhere else (at least, not that 
+I have been able to find). When an application queries the system
+for your user ID, will either get "kbox" or the meaningless jumble 
+described above, depending on how it makes the queury. 
+
+<h4>Where is the SD card directory?</h4>
+
+It's at <code>/sdcard</code>. The external SD card, if one is installed,
+is probably at <code>/storage/extSdCard</code> (Samsung devices) or
+<code>/storage/ext_sd</code> (HTC and Sony devices). In practice, 
+<code>/sdcard</code> is probably a link to <code>/storage/sdcard0</code>.
+The <code>/sdcard</code> and <code>/storage</code> directories are actually
+ordinary parts of the Android filesystem, that are imported into the
+KBOX virtual filesystem. The same applies to <code>/dev</code> and
+<code>/proc</code>.
+<p/>
+Please note that, at the time of writing, the Android emulation on
+Chromebooks provides no access to the external SD card at all.
+
+<h4>How do I change the user's home directory?</h4>
+
+Edit <code>/etc/profile</code> and add a statement 
+<code>HOME=/something</code>. In principle this afffects all users, but
+KBOX, like Android, is a single-user system, so it makes no difference.
+
+<h4>How do I customize the shell (setting a different PATH, etc)?</h4>
+
+Edit <code>/etc/profile</code>. Please refer to the comments in this file --
+they indicate lines that should not be changed.
+
+<h4>How do I run 'su' or 'login'?</h4>
+
+You can't, really. These utilities will not even compile on the Android platform,
+and there is no system-level infrastructure to support them even if
+they did. The executable <code>/bin/login</code> is a functionless stub,
+designed to support applications that insist on being able to run it.
+
+<h4>Can I log into KBOX remotely?</h4>
+
+Maybe. Packages are available to provide telnet and ssh daemons, but
+whether the Android platform will allow remote clients to get
+access is very much device-dependent. Some users have reported
+that they can get access to ssh on KBOX only if they first make
+an outgoing ssh connection from kbox to something else. This
+seems to fool the Android firewall into thinking that the inbound
+connection is part of some established TCP session. This is of 
+limited usefulness, of course. Sadly, without root access it is
+not possible to reconfigure the firewall. No recent Android device
+I have tried has allowed incoming connections on any port.
+
+
+<h4>How do I see the original Android root directory?</h4>
+
+The KBOX root directory (/) is the root of the KBOX virtual root
+filesystem. To see the original Android root, <code>cd</code> to
+directory <code>/android_root</code>. Be aware that there's very
+little to see there if you're an unprivileged user.
+
+<h4>Why do advanced features like syntax highlighting not work in vim?</h4>
+
+They do -- but you actually need to be running <code>Vim</code> not
+<code>vi</code>. Busybox contains a (limited) implementation of
+<code>vi</code>; if you just run <code>vi</code> at the prompt, that's
+what you'll get. Install the <code>Vim</code> package, and run
+<code>vim</code> instead.
+
+<h4>How do I type the 'Escape' key in Vim?</h4>
+
+Or the pipe (|) symbol? Or the Tab key? Many Linux utilities are
+intended to work with a fully-featured keyboard, with a complete range
+of punctuation and symbols. Most Android virtual keyboards fall far
+short of this ideal. Some terminal emulator apps provide mechanisms to
+map virtual keyboard operations to commonly-missing symbols. For
+example, I map the 'volume up' button on my device to the 'Escape'
+key, because you can't really use <code>Vim</code> without an
+Escape key (or at least a Ctrl key -- Ctrl+[ should generate Escape.)
+ It has to be noted that even the use of an external
+keyboard does not necessarily fix this problem -- my BlueTooth
+keyboard doesn't have an Escape key either. However, it has most
+other keys that I need, and I can still get the Escape keystroke
+by pressing Ctrl+[.
+<p></p>
+Where an external keyboard is not available, I recommend the use of
+a 3rd-party virtual keyboard that is designed for serious use. 
+I normally use Klaus Weidner's <i>Hacker's Keyboard</i> 
+(available from the Android Market) with KBOX. 
+
+<h4>Why does ping not work?</h4>
+
+<code>ping</code> requires root permissions. On a desktop Linux system,
+<code>ping</code> is typically configured with SUID flag set -- that is,
+it runs as <code>root</code> whatever the user. Android is not
+configured this way (thanks, Google).
+
+<h4>How do I add a static hostname (e.g., to /etc/hosts)?</h4>
+
+You can't. The Android platform provides no mechanism for adding static
+hostname references. The <code>hosts</code> file is just a stub, and
+even if entries are added to it (which would need root permissions)
+they still wouldn't be read. To use static hostnames you'd need to provide
+your own name resolution library, and link all utilities against that
+instead of the Android C library. It's possible in principle, but a lot
+of work for little gain. 
+
+<h4>What is involved in porting Linux utilities to KBOX?</h4>
+
+In simple cases, it's just a matter of cross-compiling the code using the
+C/C++ compiler provided in the Android Native Development Kit. In practice
+this often means building a bunch of libraries that the utility needs,
+in addition to the utility itself. Many utilities have dependencies on
+<code>ncurses</code>, for example, which is fiddly to build for Android.
+<p></p>
+It's important to understand that KBOX will <i>only</i> properly run
+code compiled with the Android NDK, and dynamically linked against the Android
+'Bionic' C library. Code that is linked against, for example,
+<code>glibc</code>, or statically linked, will probably run; but it 
+won't be able to take advantage of the KBOX virtual root filesystem, so
+the code will have to be modified (perhaps extensively) to point to
+the real filesystem locations, using the $KBOX environment variable to
+provide a pointer to the KBOX installation.
+<p></p>
+Bionic is a pretty rudimentary C library, and many functions that are
+found in <code>glibc</code> are not provided. In general, these are
+functions that make no sense in the Android environment (functions for
+managing user credentials, for example). Utilities that use these calls
+have to be modified.
+<p></p>
+KBOX is designed for running console-mode applications. At present, there's
+no realistic prospect of port X applications to KBOX. It's possible in 
+theory, but the amount of work involved is prohibitive.
+<p></p>
+For more information on building C utilties for Android using the 
+Google tools, see <a href="http://kevinboone.net/android_native.html">here</a>.
+
+<h4>What about porting utilities that play audio?</h4>
+
+This is a tricky one. At present, Android does not expose the underlying
+Linux sound drivers to applications. In fact, as of Android 5, unprivileged
+applications can't even <i>list</i> the contents of the <code>/dev</code>
+directory to see what the implementation is. I presume it's still ALSA,
+but who knows? At present the only way to produce sound is to use the
+OpenSLES API provided by Android. KBOX includes a simple utility 
+<code>android-audio-sink</code> that
+reads raw audio or WAV data and plays it using OpenSLES. The intention here
+is that an application that needs to produce sound will feed it into
+kbaudiosink, perhaps via a named pipe. So far the only audio application
+I've tried this with is the espeak text-to-speech system. It does work,
+but it's not a very elegant approach. Nevertheless, until Google does the
+Right Thing and makes the actual audio subsystem available, I doubt
+we can do much better.
+
+
+<h4>Will you port application XXX?</h4>
+
+By all means ask. Mostly the utilities I've ported to KBOX3 are the ones 
+I use myself; but I'm happy to consider others. However, if it's not
+something I'm likely to use myself, I probably won't be able to do it
+if it isn't straightforward.
+<p/>
+Please be aware that I, and other contributors, do have a bunch of stuff
+we built for KBOX but never formally packaged or distributed, because there
+doesn't seem to be any demand. For example, I know that Lua builds cleanly
+on KBOX, but I've never made a package for it because nobody has asked.
+
+
+<h4>When is X support coming?</h4>
+
+Short answer: probably never.
+<p/>
+Longer answer: I am in two minds whether this is even an avenue worth 
+exploring. On the
+one hand, there are certain X applications that could be useful on
+Android devices, and for which there is no native Android alternative.
+On the other hand, it would involve a great deal of work and, 
+in my view, there aren't <i>all that many</i> X applications that make much
+sense to run on a handheld device, and which don't have a native
+equivalent. I'm often told that this job should be simple now that
+there are X servers for Android; but the existence of an X server
+is only the start of the problem. Most X applications have dependencies
+not only on X and its libraries, but also on various toolkits 
+like GTK+ and Qt. They very often have dependencies on Linux 
+subsystems that wouldn't make any sense on Android -- DBus, for example.
+Porting all this lot to KBOX would be a colossal undertaking.
+I certainly have no enthusiasm for spending weeks of evenings just to
+see xclock and twm running under KBOX. Life's too short. 
+<p></p>
+What might sway me on this matter is to be shown a killer app 
+that requires X support, doesn't have an Android equivalent, and
+has no onerous dependencies on desktop Linux infrastructure. 
+
+<h4>Can I build applications for KBOX within KBOX itself?</h4>
+
+Most of the KBOX utilities have been cross-compiled using the
+Android NDK on a Linux PC. However, a C compiler is available
+for KBOX, as are certain common build tools (<code>make</code>, etc).
+So it's certainly possible to build some applications on
+the Android device itself. Building this way solves a bunch of problems
+that are routinely associated with cross-compilation; but if the
+build is complicated enough that it needs to be performed this way,
+you might well find that it fails for other reasons -- because, for example,
+KBOX is missing certain utilities that the build needs. 
+<p/>
+Incidentally, I do have "development" packages for common libraries like
+<code>ncurses</code>, that include the C header files that you need
+to build applications that use those libraries. I don't routinely 
+distribute them because I'm not aware of anybody except me who uses
+them, but  do ask if you need something like that.
+
+<h4>What about scripting languages?</h4>
+
+Reasonably complete implementations of Perl and Python 3 are available. 
+If you have a pressing need for some other language (Lua? Ruby?)
+please ask -- I can at least give an idea whether it's likely
+to be practicable.
+
+<h4>How to I install an updated version of an optional package?</h4>
+
+Just run <code>dpkg -i [package].deb</code>, as for installing. The
+new version will overwrite the old one.
+
+<h4>How do I install a later version of the base distribution?</h4>
+
+This is tricky. You can't do it from within the KBOX shell, because 
+many of the files that will need to be overwritten will be in use.
+The only way to update the base system that I can think of is as follows.
+<p/>
+1. Set the terminal emulator to use the default shell, <code>/system/bin/sh -</code>, rather than the KBOX shell.<br/>
+2. Close the terminal emulator completely.<br/>
+3. Restart the terminal emulator.<br/>
+4. Install the base installation, exactly as if this were a fresh
+install (see <a href="kbox_install.html">installation</code> page).</a><br/>
+5. Set the terminal emulator to use the KBOX shell again.<br/>
+
+<h4>Why does the <code>man</code> command no longer work?</h4>
+
+<code>man</code> is provided by Busybox, but all it does is feed manpages
+into the text formatting utility <code>nroff</code>, which is not provided.
+I removed <code>nroff</code> from the base system because it is 
+rather large, and I wanted to keep the base system minimal in 
+KBOX3. So to read manpages, you will need to install the <code>groff</code>
+package. Please be aware that if your terminal emulator is set for fewer
+than 80 columns, manpages will likely be formatted badly.
+
+<h4>Why do some packages install in <code>/bin</code>, some in <code>/usr/bin</code>, etc?</h4>
+
+No good reason. KBOX is based on contributions from many different people, all
+of whom like to do things in their own way. 
+
+
+<h4>Can I have the source code for KBOX?</h4>
+
+The build scripts are on <a href="https://github.com/kbox4">github</a>, 
+along with the small amount of original code. The code for the actual
+utilities is all open source, and distributed as part of KBOX. The
+KBOX distribution on githib contains the patches that modify the
+open-source "upstream" code to work with KBOX, and no more than that.
+
+
+<h4>Can I contribute to KBOX?</h4>
+
+Yes, please! About a half-dozen people have contributed packages to 
+the project that they either built using Google's Android NDK or
+built on an Android device after installing <code>gcc</code>, <code>make</code>,
+etc. Many more people have tried KBOX and reported bugs or made suggestions
+for improvements, and these are also valued contributions.
+
+ 
+
+
+
+

@@ -1,0 +1,41 @@
+<h2>About KBOX</h2>
+KBOX is a set of Linux command-line and console utilities, built to run on 
+Android devices (and Chromebooks with Android support). Android already
+runs Linux, of a sort, and it isn't obvious why a special environment
+is needed to run Linux utilities. After all, terminal emulators are
+already available, and Android already provides basic command-line
+utilities.
+<p/>
+The problem is that the Android Linux implementation is pretty minimal, and the
+filesystem layout isn't very much like a traditional Linux system. So it's
+actually quite difficult to run more complex utilties (Perl, gcc, Python)
+in a way that is familiar, even if they can be built at all.
+<p/>
+The central parts of KBOX are:
+<ul>
+<li><code>libfakechroot</code>, a library that intercepts all low-level 
+C library 
+calls that deal with file operations, and remaps file locations. It is this
+that provides the illusion of a traditional Linux filesystem, and</li>
+<li><code>kbox_shell</code>, a process that is started by the terminal
+emulator, and runs a shell (Busybox, Bash, Zsh) with the proper
+operating environment for <code>libfakechroot</code> do do its thing.</li>
+</ul> 
+
+KBOX is specifically designed for Android devices that are <i>not</i>
+rooted. There's nothing to stop it being installed on a rooted device,
+but the kinds of tricks it uses are unlikely to be necessary on a
+device to which the user has complete administrative access.
+<p/>
+The current version of KBOX is KBOX4. It provides (at present)
+the same utilties as KBOX3, but uses a completely different build process.
+This new process should make it easier to provide builds for 
+different Android hardware. KBOX3 packages will (or, at least, should)
+deploy and run on KBOX4, provided that builts are available for the
+device architecture. The reverse is probably true. KBOX4 completely
+supercedes all previous releases, which should be regarded as obsolete.
+<p/>
+KBOX is primarily maintained by Kevin Boone (kevin at railwayterrace dot com),
+with contributions from a number of other people. The intellectual property
+rights to the various packages it provides belong to the authors
+of those package -- KBOX itself has very little original code.

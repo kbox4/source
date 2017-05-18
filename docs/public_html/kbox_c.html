@@ -1,0 +1,100 @@
+<h1>Building C/C++ applications under KBOX</h1>
+
+For most applications, the preferred approach for building C/C++
+applications to run under KBOX is to cross-compile 
+them on a desktop
+workstation (probably running Linux) using Google's Native Development
+Kit (NDK) tools. The NDK is essentially a build of GNU <code>gcc</code>
+configured for Android.
+<p/>
+In fact, there really aren't many good reasons for hacking on C
+code on an Android device -- generally these devices are slow
+(compared to a desktop computer), and have inadequate screens and
+keyboards. However, there are some applications that, even in these
+enlightened times, are difficult or impossible to cross-compile. 
+Perl is a good example: cross-compiling 
+Perl for Android is a brain-bendingly unpleasant task. By building
+these applications directly on the device, we turn a cross-compilation
+problem into a regular compilation problem, albeit probably still a 
+very difficult one (largely because of all the limitations in the
+Android standard C library.)
+<p/> 
+In addition, for educational purposes, people have expressed an interest in
+having a way to fiddle with simple C applications whilst standing packed
+shoulder-to-shoulder on the train in the morning rush-hour.
+<p/>
+Whatever the reason, KBOX has a build of <code>gcc</code>, version
+4.9.2 (contributed by Cyd Hasleton), and the usual GNU utilities
+like <code>make</code>. It's certainly possible to build substantial
+applications like Python or Perl directly on the device, although
+it may take some time.
+<p/>
+The <code>gcc</code> package is available on 
+the <a href="kbox_downloads.html">Downloads</a> page, and can be installed
+using <code>dpkg -i</code> in the usual way. The compiler installs
+primarily in <code>/usr/gcc-4.9-pie</code>, although some libraries 
+are installed
+in <code>/usr/lib</code>. The utilties <code>/usr/bin/gcc</code>,
+<code>/usr/bin/g++</code>, and <code>/usr/bin/cpp</code> are actually
+scripts, which run the binaries with particular command-line arguments.
+In some situations it will be necessary to invoke <code>gcc</code> 
+explicitly as <code>/usr/gcc-4.9-pie/bin/gcc</code>, and specify
+different arguments, as will be discussed. However, if you're just
+compiling "Hello, world," then this should do the trick:
+
+<pre class="codeblock">
+kbox$ gcc -o hello hello.c
+</pre>
+
+This is exactly the same invocation that ought to work on a desktop
+PC.
+
+<p/>
+
+When running <code>gcc</code> this way, it is
+actually invoked like this:
+
+<pre class="codeblock">
+kbox$ /usr/gcc-4.9-pie/bin/gcc -fPIC -fPIE -pie --sysroot=/usr/gcc-4.9-pie/sysroot -o hello hello.c
+</pre>
+
+The various "PI" flags tell the compiler to produce position-independent
+code. For various reasons -- none of which repay detailed scrutiny 
+-- Google has insisted on this for Android 5 and later. You'd have to specify
+these arguments when building on a desktop PC with the NDK as well.
+<p/>
+The <code>sysroot</code> argument indicates where <code>gcc</code> should
+look for its standard directories like <code>/usr/include</code> and
+<code>/usr/lib</code>. I have packaged <code>gcc</code> with these directories
+separate from the conventional places because
+I've encountered incompatibilities if libraries like <code>libc.so</code> 
+are placed into the system <code>/usr/lib</code> directory. These sysroot
+libraries
+are only used by the <code>gcc</code> linker -- at runtime the 
+standard Android Bionic libraries are used. So, apart from
+creating an odd filesystem layout compared to a desktop workstation, there's
+no disadvantage to keeping <code>gcc</code>'s versions of standard libraries
+separate from system versions. However, some automated build utilities do
+insist on knowing where C/C++ header files actually are and, in this
+package, they are in <code>/usr/gcc-4.9-pie/sysroot/usr/include</code>.
+<p/>
+On some systems, both compiling and linking produce warning messages
+of the form "WARNING: unused DT entry..." I do not know why this happens,
+but so far the messages seem to be harmless.
+<p/>
+Please bear in mind that this implementation of <code>gcc</code> will
+produce applications that run under KBOX and, specifically, use the
+standard C library (BIONIC) provided by Android. This library is limited compared
+to a desktop C library like <code>glibc</code>, but is a better match
+(for the most part) for Android, which is a limited version of Linux.
+Most non-trivial applications will need changes -- often substantial
+changes -- to build on Android. These changes are not necessitated
+simply by the different C library, but by Android's unconventional security
+model, unconventional filesystem layout, 
+odd use of user and group IDs, lack of common Linux system services,
+undocumented and proprietary audio API, etc., etc. Building under
+KBOX, rather than raw Android, conceals some of these limitations,
+but by no means all of them.
+
+ 
+

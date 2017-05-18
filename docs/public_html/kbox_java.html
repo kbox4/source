@@ -1,0 +1,299 @@
+<h1>Compiling and running Java code under KBOX4</h1>
+
+<table cellpadding="10" width="70%" border="1" align="center">
+<tr>
+<td>
+Please note that recent Android releases are rather hostile to 
+Java development under KBOX, because of Google's change from
+using OpenSSL to BoringSSL for the SSL implementation. Please
+see the note "OpenSSL issues" in this article. 
+</td>
+</tr>
+<table>
+<p/>
+
+
+
+KBOX4 has preliminary, experimental support for compiling and running
+(Android) Java code at the command prompt. This page describes
+in outline how to do this, and then how it works. Please
+note that I'm assuming a fairly high level of Java knowledge
+here: building Java on the command line isn't necessarily a job for
+the beginner even with a desktop computer, and Android introduces
+its own complexities. In any event, the basic process
+is this:
+<br clear="all"/>
+<ul>
+<li>Compile the Java source files to <code>.class</code> files, as usual</li>
+<li>Bundle the <code>.class</code> files into a JAR file (if
+there are more than one of them)</li>
+<li>Convert the JAR file to an android DEX file</li>
+<li>Run the main class from within the DEX file using the Dalvik
+JVM (or whatever it's called these days)</li>
+</ul>
+
+The steps are almost identical to building and running Java code
+at the command line on a desktop computer, with the exception
+of the extra DEX step.
+<p/>
+It's not clear how practical it will prove to be to build Java applications
+on an Android device -- there are quite a few limitations compared to 
+desktop Java development. However, some fairly substantial applications
+have been made to run. For the avoidance of doubt, I should point out
+that I'm talking about console applications here -- Java graphical
+applications cannot be made to work using the technique described here. 
+
+<h2>Quick start -- one Java source file</h2>
+
+Install the <code>java-support</code> package (see the 
+<a href="kbox_downloads.html">downloads</a> page.
+
+<pre class="codeblock">
+$ dpkg -i /path/to/java-support-0.0.1_kbox4_[arch].html
+</pre>
+
+Create a Java source file using, e.g., Vim or nano. For this example,
+assume the file is <code>Test.java</code>, defining a Java class
+<code>Test</code> in the default package. Because we're going to
+run the class on the command line, it must define a <code>main()</code>
+method.
+<p/>
+Compile the Java class in the usual way.
+
+<pre class="codeblock">
+$ javac Test.java 
+</pre>
+
+This should create <code>Test.class</code> in the same directory as the
+Java source file. Convert the class to Android DEX format:
+
+<pre class="codeblock">
+$ dx --dex --output=test.dex Test.class 
+</pre>
+
+Run the class:
+
+<pre class="codeblock">
+$ dalvikvm -cp test.dex Test
+</pre>
+
+<h2>Slightly slower start -- multiple Java source files</h2>
+
+In addition to <code>java-support</code>, you will also need
+a zip utility (because KBOX4 does not have a 'jar' utility yet).
+Get zip from the <a href="kbox_downloads.html">downloads</a> page
+and install it:
+
+<pre class="codeblock">
+$ dpkg -i /path/to/zip_3.0_kbox4_[arch].html
+</pre>
+
+In this example, assume we have two Java files, <code>Test.java</code>
+and <code>AnotherTest.java</code>. They are in the package <code>test</code>,
+and the <code>main()</code> method is defined in <code>Test.java</code>.
+<p/>
+Compile the classes, placing the compiled output in the <code>out</code>
+directory (this will keep things nicely bundled together for the next step):
+
+<pre class="codeblock">
+$ javac -d out/ Test.java AnotherTest.java 
+</pre>
+
+Note that a directory <code>test</code> is created under <code>out</code>,
+because the directory hierarchy must match the package hierarchy.
+<p/>
+Create a JAR file containing the classes, maintaining the directory
+hierarchy. Note that a JAR file is structurally a zip file, so we can
+use the zip utility for this.
+
+<pre class="codeblock">
+$ cd out
+$ zip -r test.jar . 
+$ cd ..
+</pre>
+
+Convert the JAR file into an Android DEX file:
+
+<pre class="codeblock">
+$ dx --dex --output=out/test.dex out/test.jar 
+</pre>
+
+Then run the program:
+
+<pre class="codeblock">
+$ dalvikvm -cp out/test.dex test.Test 
+</pre>
+
+Note that the class name must be qualified by its package name -- we
+run a class, not a file. Note that if you want to repeat these
+steps, you'll need to remove <code>test.dex</code> and <code>test.jar</code>
+from <code>out/</code>, else they will end up in the zip file in the
+next cycle; this will not hurt, but it will lead to unnecessary bloat.
+<p/>
+Of course, these steps can readily be automated in a script or
+a Makefile.
+
+<h2>How it works</h2>
+
+<h3>Running Java on Android</h3>
+
+The Android Java runtime can be invoked using the command <code>dalvikvm</code>.
+In fact, since Android 5 the Java runtime is no longer Dalvik, but the
+same name is used. <code>dalvikvm</code> takes similar command-line
+arguments to <code>java</code>, but takes as its input Android DEX files
+rather than <code>.class</code> files.
+<p/>
+To run <code>dalvikvm</code> 
+the directory <code>/data/dalvik-cache</code> available, otherwise the
+JVM will abort on startup. Because of the Android file permissions,
+you won't be able to see this directory if you list <code>/data</code>, 
+but it should be there all the same. 
+<p/>
+It should be possible to run a Java class that is contained
+in a DEX archive like this:
+
+<pre class="codeblock">
+$ dalvikvm -cp {DEX_file} {class_name} [options] 
+</pre>
+
+This will run the <code>main()</code> method in the specified class
+just as <code>java</code> would.
+
+<h3>Building Java on Android</h3>
+
+Android does not provide a Java compiler. In fact, the Android SDK for
+desktop computer does not provide a Java compiler either -- developers
+are expected to use the familiar Sun/Oracle JDK to generate Java
+<code>.class</code> files, and then use the <code>dx</code> utility to
+convert them to Android DEX format.
+<p/>
+Happily, <code>javac</code> is largely written in Java. The implementation in
+a standard desktop JDK is mostly in the <code>tools.jar</code> bundle, which is
+now open-source (GPL v2). So all (!) that we need to do to get a Java compiler
+on Android is to build <code>tools.jar</code> using JDK1.6, and convert
+it to Android DEX format. It turns out that there's a bit more to it than
+this -- limitations in the Dalvik JVM mean that quite a few code
+changes were necessary (see the Limitations section below for details).
+Building <code>tools.jar</code> itself is not enough, because the 
+compiler needs access to all the Java classes referenced by the
+application being built, including the platform classes 
+(in <code>java.lang</code>, etc.)
+These do exist on Android but -- so far as I can tell -- only in DEX
+format, which the compiler can't read. So we must also provide a 
+JAR-based implementation of the complete Android API set. Happily,
+such a thing is provided  -- <code>android.jar</code> -- 
+in the Android SDK, for use with desktop
+build tools. In fact, several such things are provided -- one for each
+Android API level. So to build a Java application under KBOX, you
+could copy a suitable <code>android.jar</code> to the device and do this:
+
+
+<pre>
+$ dalvikvm -cp tools.dex com.sun.tools.javac.Main -cp /path/to/android.jar /path/to/java/code/*.java
+</pre>
+
+Of course, the resulting class files must then be converted to DEX
+format using the <code>dx</code> utility.
+<p/>
+Note that the command above has two <code>-cp</code> (class path) arguments:
+the first is to the Dalvik VM, indicating where the compiler JAR is; the
+second is to the Java compiler, indicating where it should look for
+framework classes.
+<p/>
+To make this process less cumbersome, <code>java-support</code> contains
+a build of <code>javac</code> that automatically adds the the Android API
+JAR to the class search path, and a script to simplify its execution,
+so you should just be able to do
+
+<pre>
+$ javac [options] java_files... 
+</pre>
+
+in the usual, desktop way.
+
+<h3>Assembling multiple Java classes into an application</h3>
+
+In reality, a Java application is rarely implemented in a single class.
+The DEX format is an archive, as JAR is, and it seems as if the
+<code>dx</code> utility should be able to build a DEX file from a collection
+of named <code>.class</code> files. However, if that is possible, I've
+never been able to make it work. It is straightforward, however,
+to build a DEX archive from a JAR file. So to build an application 
+from multiple Java classes, all we need do is package them into 
+a JAR, and then feed the whole JAR into <code>dx</code>. 
+<p/>
+KBOX4 does not have a <code>jar</code> utility (yet) but this is
+not a problem -- we can build a JAR archive using <code>zip</code> --
+the file formats and compression methods are identical. Some trouble
+has to be taken to ensure that the directory hierarchy in the ZIP/JAR
+are a perfect match for the package hierarchy in the Java code, but
+that's a problem when using <code>jar</code> on the command line
+as well.
+
+
+<h2>Limitations</h2>
+
+The methods described in this article exploit the built-in DalviT
+Java runtime in Android -- it's not a new kind of Java. Dalvik offers
+a reduced API set compared to desktop/server Java, and some APIs are
+implemented differently than might be expected. A good example is
+the API for retrieving resource bundles from the JAR file that contains
+the running program -- <code>getResourceAsString()</code> and the
+like. These methods have been implemented to search for resources
+in an APK file, not in the JAR file, to be more useful for the 
+developers of Android GUI apps. These API calls are therefore completely
+useless for a console application, and have to be replaced with
+something else. To port the <code>javac</code> compiler, for example,
+I had to replace these resource API calls with functions that read
+message strings from a named file.
+<p/>
+There is no problem <i>in principle</i> with integrating 3rd-party 
+Java libraries
+with an Android Java program, and it could be very useful to do so.
+There are two pragmatic problems, however. First, Android Java is at present
+aligned to JDK1.6, and the <code>dx</code> tool can't handle code
+generated by later versions that this. But most open-source Java
+libraries are now built using Java 7 or Java 8, so they would need
+to be rebuilt. But the tools needed to rebuild them are themselves all
+based on Java 7 and Java 8, and you can see where this is leading...
+<p/>
+Second, when most libraries are distributed in binary format -- even
+if they were built with Java 6 -- they are distributed as JAR files,
+so they will need to be converted to DEX format for Android. This
+is not necessarily a large hurdle, but it is at least an irritation.
+<p/>
+
+
+<h2>OpenSSL issues</h2>
+
+The Android JVM has a dependency on an SSL library for encryption 
+support. Until recently, Android provided OpenSSL, which is what
+most Linux applications use for SSL support.
+<p/>
+Unfortunately, later Android versions
+use a Google variant of OpenSSL called "BoringSSL", which is almost
+<i>but not quite</i> compatible with OpenSSL. If you get "undefined
+symbol" errors and such-like when trying to run a utility that uses
+SSL (<code>curl</code>, for example) then you probably need to 
+install the KBOX OpenSSL package.
+<p/>
+However, doing this will probably break the JVM, so far as KBOX
+operation is concerned. Both OpenSSL and BoringSSL use the same
+library filenames (<code>libssl.so</code> and <code>libcrypto.so</code>),
+and the Android loader will use the KBOX versions if they are installed.
+This behaviour cannot easily be changed and, even if it is,
+some other utilities will fail because they are not compatible with
+BoringSSL.
+<p/>
+At present, the only (partial) solution to this problem is to delete
+the SSL libraries in <code>/usr/lib</code>, and copy or create links
+to the Android versions in <code>/system/lib</code> -- but only when
+building or running Java code. Sadly, there is no more elegant 
+solution at present.
+
+
+
+
+
+
+

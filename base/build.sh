@@ -24,7 +24,7 @@ mkdir -p $BUILD_DIR
 
 mkdir -p $DIST
 ZIP=/tmp/kbox4-base-installer.zip
-TARGET=$DIST/kbox4-install-base
+TARGET=$DIST/kbox4-install-base-$DEB_ARCH
 
 cp installer/* $BUILD_DIR
 cp $STAGING/kbox_shell-0.0.1/kbox_shell $BUILD_DIR/

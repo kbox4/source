@@ -6,9 +6,9 @@ this release at all.  This is because later versions of Android are
 increasingly reluctant to allow incoming network connections, and so I lack any
 way of testing whether they work or not.
 
-"file" won't build unless there is a version on the host that is the same version as
-the version being cross-compiled. It may be necessary to update your local "file"
-first.
+"file" won't build unless there is a version on the host that is the same
+version as the version being cross-compiled. It may be necessary to update your
+local "file" first.
 
 Ditto "python".
 

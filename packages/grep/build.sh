@@ -1,15 +1,15 @@
 #!/bin/bash
-#https://github.com/kevinboone/android-audio-sink/archive/0.0.1.tar.gz
+#http://mirror2.klaus-uwe.me/gnu/grep/grep-3.0.tar.xz
 
-VERSION=0.0.2
+VERSION=3.0
 VVERSION=$VERSION
-SUFFIX=tar.gz
-NAME=android-audio-sink
-DOWNLOAD_URL=https://github.com/kevinboone/android-audio-sink/archive/$VVERSION.$SUFFIX
+SUFFIX=tar.xz
+NAME=grep
+DOWNLOAD_URL=http://mirror2.klaus-uwe.me/gnu/grep/$NAME-$VVERSION.$SUFFIX
 
 . ../../env.sh
 
-BUILD_DIR=$STAGING/${NAME}-${VERSION}
+BUILD_DIR=$STAGING/$NAME-$VERSION
 TARGET=$BUILD_DIR/$NAME
 DEB=$BUILD_DIR/$NAME-${VERSION}_kbox4_${DEB_ARCH}.deb
 
@@ -28,22 +28,43 @@ if [ ! -d $BUILD_DIR ]; then
     echo "Using cached $TARBALL"
   fi 
   mkdir -p $STAGING
-  (cd $STAGING; tar xfvz $TARBALL)
+  (cd $STAGING; tar xfvJ $TARBALL)
 else
-  echo "Building cached $NAME-$VERSION"
+  echo "Building cached $VERSION"
 fi
+
+
+echo Running Configure...
+
+(cd $BUILD_DIR; CC=$CC CXX=$CXX CFLAGS="-std=c99 -fpie -fpic" CXXFLAGS="-fpie -fpic" LDFLAGS="-pie -s" ./configure --host=$CONFIG_HOST --prefix=/usr)
+
+if [[ $? -ne 0 ]] ; then
+    echo Configure failed ... stopping
+    exit 1
+fi
+
 
 echo "Running make"
 
-mkdir -p $BUILD_DIR/image/
+(cd $BUILD_DIR; make CC=$CC)
 
-(cd $BUILD_DIR; make CC=$CC DESTDIR=`pwd`/image all install)
+if [[ $? -ne 0 ]] ; then
+    echo make failed ... stopping
+    exit 1
+fi
+
+echo "Running make install"
+
+mkdir -p $BUILD_DIR/image/bin
+
+(cd $BUILD_DIR; make CC=$CC DESTDIR=`pwd`/image install)
 
 if [[ $? -ne 0 ]] ; then
     echo make install failed ... stopping
     exit 1
 fi
 
+cp $BUILD_DIR/image/usr/bin/${NAME} $BUILD_DIR/image/bin/${NAME}
 
 echo "Building package"
 mkdir -p $BUILD_DIR/out

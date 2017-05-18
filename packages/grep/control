@@ -1,0 +1,7 @@
+Package: grep
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: The GNU grep utility. This offers more functionality that the Busybox version, and replaces it on installation. 

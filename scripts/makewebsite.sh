@@ -95,7 +95,7 @@ process_html $packagehtmlfile;
 # Do a plain copy of image and CSS files to the output directory
 ####
 
-#cp $html_dir/*.png $output_dir
+cp $html_dir/*.gif $output_dir
 cp $html_dir/*.css $output_dir
 
  

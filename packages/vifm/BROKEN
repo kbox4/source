@@ -1,0 +1,6 @@
+This package builds, but the program segfaults just after redrawing the display
+after invoking vi. I had to stub out a lot of user/group handling stuff
+just to get the program to build at all, but I don't think that's the
+problem. Something else is returning NULL on Android when it isn't 
+expected. Without proper debugging tools, I suspect it will be impossible
+to figure out what :/

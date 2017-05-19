@@ -13,8 +13,6 @@ BUILD_DIR=$STAGING/$NAME-$VERSION
 TARGET=$BUILD_DIR/$NAME
 DEB=$BUILD_DIR/$NAME-${VERSION}_kbox4_${DEB_ARCH}.deb
 
-if [ -f sodit ]; then
-
 if [ -f $DEB ]; then
   echo $DEB exists -- delete it to rebuild
   exit 0;
@@ -35,6 +33,9 @@ else
   echo "Building cached $VERSION"
 fi
 
+echo "Patching..."
+patch $BUILD_DIR/Makefile patch_Makefile
+patch $BUILD_DIR/Makefile patch_Makefile2
 
 echo "Running make"
 
@@ -49,10 +50,6 @@ mkdir -p $BUILD_DIR/image/
 
 echo "Running make install"
 (cd $BUILD_DIR; make CC=$CC CFLAGS="-fpie -fpic" LDFLAGS="-pie" prefix="/usr" DESTDIR=image install)
-
-fi
-#sodit
-
 
 echo "Building package"
 mkdir -p $BUILD_DIR/out

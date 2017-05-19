@@ -1,0 +1,16 @@
+10,12c10,12
+< GLKINCLUDEDIR = ../cheapglk
+< GLKLIBDIR = ../cheapglk
+< GLKMAKEFILE = Make.cheapglk
+---
+> #GLKINCLUDEDIR = ../cheapglk
+> #GLKLIBDIR = ../cheapglk
+> #GLKMAKEFILE = Make.cheapglk
+14,16c14,16
+< #GLKINCLUDEDIR = ../glkterm
+< #GLKLIBDIR = ../glkterm
+< #GLKMAKEFILE = Make.glkterm
+---
+> GLKINCLUDEDIR = ../glkterm
+> GLKLIBDIR = ../glkterm
+> GLKMAKEFILE = Make.glkterm

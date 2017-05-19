@@ -1,0 +1,148 @@
+6775,6776c6775,6776
+< ac_fn_c_check_func "$LINENO" "getgrent" "ac_cv_func_getgrent"
+< if test "x$ac_cv_func_getgrent" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getgrent" "ac_cv_func_getgrent"
+> #if test "x$ac_cv_func_getgrent" = xyes; then :
+6778,6780c6778,6780
+< else
+<   as_fn_error $? "getgrent() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getgrent() function not found." "$LINENO" 5
+> #fi
+6782,6783c6782,6783
+< ac_fn_c_check_func "$LINENO" "getgrgid" "ac_cv_func_getgrgid"
+< if test "x$ac_cv_func_getgrgid" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getgrgid" "ac_cv_func_getgrgid"
+> #if test "x$ac_cv_func_getgrgid" = xyes; then :
+6785,6787c6785,6787
+< else
+<   as_fn_error $? "getgrgid() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getgrgid() function not found." "$LINENO" 5
+> #fi
+6789,6790c6789,6790
+< ac_fn_c_check_func "$LINENO" "getgrgid_r" "ac_cv_func_getgrgid_r"
+< if test "x$ac_cv_func_getgrgid_r" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getgrgid_r" "ac_cv_func_getgrgid_r"
+> #if test "x$ac_cv_func_getgrgid_r" = xyes; then :
+6792,6794c6792,6794
+< else
+<   as_fn_error $? "getgrgid_r() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getgrgid_r() function not found." "$LINENO" 5
+> #fi
+6796,6797c6796,6797
+< ac_fn_c_check_func "$LINENO" "getgrnam" "ac_cv_func_getgrnam"
+< if test "x$ac_cv_func_getgrnam" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getgrnam" "ac_cv_func_getgrnam"
+> #if test "x$ac_cv_func_getgrnam" = xyes; then :
+6799,6801c6799,6801
+< else
+<   as_fn_error $? "getgrnam() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getgrnam() function not found." "$LINENO" 5
+> #fi
+6826,6827c6826,6827
+< ac_fn_c_check_func "$LINENO" "getpwent" "ac_cv_func_getpwent"
+< if test "x$ac_cv_func_getpwent" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getpwent" "ac_cv_func_getpwent"
+> #if test "x$ac_cv_func_getpwent" = xyes; then :
+6829,6831c6829,6831
+< else
+<   as_fn_error $? "getpwent() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getpwent() function not found." "$LINENO" 5
+> #fi
+6833,6834c6833,6834
+< ac_fn_c_check_func "$LINENO" "getpwnam" "ac_cv_func_getpwnam"
+< if test "x$ac_cv_func_getpwnam" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getpwnam" "ac_cv_func_getpwnam"
+> #if test "x$ac_cv_func_getpwnam" = xyes; then :
+6836,6838c6836,6838
+< else
+<   as_fn_error $? "getpwnam() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getpwnam() function not found." "$LINENO" 5
+> #fi
+6840,6841c6840,6841
+< ac_fn_c_check_func "$LINENO" "getpwuid" "ac_cv_func_getpwuid"
+< if test "x$ac_cv_func_getpwuid" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getpwuid" "ac_cv_func_getpwuid"
+> #if test "x$ac_cv_func_getpwuid" = xyes; then :
+6843,6845c6843,6845
+< else
+<   as_fn_error $? "getpwuid() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getpwuid() function not found." "$LINENO" 5
+> #fi
+6847,6848c6847,6848
+< ac_fn_c_check_func "$LINENO" "getpwuid_r" "ac_cv_func_getpwuid_r"
+< if test "x$ac_cv_func_getpwuid_r" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "getpwuid_r" "ac_cv_func_getpwuid_r"
+> #if test "x$ac_cv_func_getpwuid_r" = xyes; then :
+6850,6852c6850,6852
+< else
+<   as_fn_error $? "getpwuid_r() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "getpwuid_r() function not found." "$LINENO" 5
+> #fi
+7092,7093c7092,7093
+< ac_fn_c_check_func "$LINENO" "setgrent" "ac_cv_func_setgrent"
+< if test "x$ac_cv_func_setgrent" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "setgrent" "ac_cv_func_setgrent"
+> #if test "x$ac_cv_func_setgrent" = xyes; then :
+7095,7097c7095,7097
+< else
+<   as_fn_error $? "setgrent() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "setgrent() function not found." "$LINENO" 5
+> #fi
+7122,7123c7122,7123
+< ac_fn_c_check_func "$LINENO" "setpwent" "ac_cv_func_setpwent"
+< if test "x$ac_cv_func_setpwent" = xyes; then :
+---
+> #ac_fn_c_check_func "$LINENO" "setpwent" "ac_cv_func_setpwent"
+> #if test "x$ac_cv_func_setpwent" = xyes; then :
+7125,7127c7125,7127
+< else
+<   as_fn_error $? "setpwent() function not found." "$LINENO" 5
+< fi
+---
+> #else
+> #  as_fn_error $? "setpwent() function not found." "$LINENO" 5
+> #fi
+8285c8285
+< LIBS="-lpthread  $LIBS"
+---
+> #LIBS="-lpthread  $LIBS"
+8316c8316
+<   LIBS="$LIBS -lpthread"
+---
+> #  LIBS="$LIBS -lpthread"

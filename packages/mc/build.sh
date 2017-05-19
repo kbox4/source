@@ -1,11 +1,10 @@
 #!/bin/bash
-#http://www.tads.org/frobtads/frobtads-1.2.3.tar.gz
-
-VERSION=1.2.3
+#http://ftp.midnight-commander.org/mc-4.8.1.tar.xz
+VERSION=4.8.1
 VVERSION=$VERSION
-SUFFIX=tar.gz
-NAME=frobtads
-DOWNLOAD_URL=http://www.tads.org/$NAME/$NAME-$VVERSION.$SUFFIX
+SUFFIX=tar.bz2
+NAME=mc
+DOWNLOAD_URL=http://ftp.midnight-commander.org/${NAME}-4.8.1.tar.xz
 
 . ../../env.sh
 
@@ -13,6 +12,7 @@ BUILD_DIR=$STAGING/$NAME-$VERSION
 TARGET=$BUILD_DIR/$NAME
 DEB=$BUILD_DIR/$NAME-${VERSION}_kbox4_${DEB_ARCH}.deb
 
+#if [ -f skip ]; then
 if [ -f $DEB ]; then
   echo $DEB exists -- delete it to rebuild
   exit 0;
@@ -28,34 +28,52 @@ if [ ! -d $BUILD_DIR ]; then
     echo "Using cached $TARBALL"
   fi 
   mkdir -p $STAGING
-  (cd $STAGING; tar xfvz $TARBALL)
+  (cd $STAGING; tar xfJ $TARBALL)
 else
   echo "Building cached $VERSION"
 fi
 
+
 echo Running Configure...
 
-(cd $BUILD_DIR; CC=$CC CXX=$CXX CFLAGS="-fpie -fpic -I/usr/include/ncurses" CXXFLAGS="-fpie -fpic -I/usr/include/ncurses" LDFLAGS="-pie" LIBS="-lcurl -lz -lssl -lcrypto"  ./configure --host=$CONFIG_HOST --prefix=/usr)
+(cd $BUILD_DIR; CC=$CC CXX=$CXX CFLAGS="-fpie -fpic -I$SYSROOT/usr/include/ncurses" LDFLAGS="-pie -s" LIBS="-lncurses" STRIP=$STRIP ./configure --host=$CONFIG_HOST --prefix=/usr --with-screen=ncurses)
 
 if [[ $? -ne 0 ]] ; then
     echo Configure failed ... stopping
     exit 1
 fi
 
+exit
+
+#echo "Patching"
+
+#patch $BUILD_DIR/src/cmd_completion.c patch_cmd_completion.c
+#patch $BUILD_DIR/src/utils/utils_nix.c patch_utils_nix.c
+
+#fi
+#skip
 
 echo "Running make"
 
-(cd $BUILD_DIR; make CC=$CC CXX=$CXX)
+(cd $BUILD_DIR; make CC=$CC)
 
 if [[ $? -ne 0 ]] ; then
     echo make  failed ... stopping
     exit 1
 fi
 
-mkdir -p $BUILD_DIR/image/
+exit
 
 echo "Running make install"
-(cd $BUILD_DIR; make DESTDIR=`pwd`/image install)
+
+mkdir -p $BUILD_DIR/image/
+
+(cd $BUILD_DIR; make CC=$CC DESTDIR=`pwd`/image install)
+
+if [[ $? -ne 0 ]] ; then
+    echo make  failed ... stopping
+    exit 1
+fi
 
 echo "Building package"
 mkdir -p $BUILD_DIR/out

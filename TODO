@@ -1,3 +1,5 @@
+"text relocation" messages related to openssl libcrypto on i686.
+
 man pages are not formatted properly by groff -- there are a bunch of terminal
 codes in the page. I don't think the problem is with groff itself, because I
 tested that it can format man page text correctly on the command line. Rather,

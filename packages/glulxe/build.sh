@@ -35,9 +35,13 @@ else
 fi
 
 
+echo "Patching"
+
+patch $BUILD_DIR/Makefile patch_Makefile
+
 echo "Running make"
 
-(cd $BUILD_DIR; make CC=$CC)
+(cd $BUILD_DIR; make CC=$CC OPTIONS="-g -Wall -Wmissing-prototypes -Wstrict-prototypes -Wno-unused -DOS_UNIX -fpie -fpic -pie")
 
 mkdir -p $BUILD_DIR/image/usr/bin
 $STRIP $BUILD_DIR/glulxe

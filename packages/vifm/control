@@ -1,0 +1,7 @@
+Package: vifm
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A console-mode file manager with vi-like key bindings.

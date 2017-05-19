@@ -1,11 +1,11 @@
 #!/bin/bash
-#https://ftp.gnu.org/gnu/readline/readline-7.0.tar.gz
+#https://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz
 
-VERSION=7.0
+VERSION=6.0
 VVERSION=$VERSION
 SUFFIX=tar.gz
-NAME=readline
-DOWNLOAD_URL=ftp://ftp.gnu.org/gnu/readline/$NAME-$VVERSION.$SUFFIX
+NAME=ncurses
+DOWNLOAD_URL=https://ftp.gnu.org/gnu/ncurses/$NAME-$VVERSION.$SUFFIX
 
 . ../../env.sh
 
@@ -38,7 +38,7 @@ fi
 echo Running Configure...
 
 
-(cd $BUILD_DIR; CC=$CC CFLAGS="-fpie -fpic" LDFLAGS="" LIBS=-lncurses ./configure --host=$CONFIG_HOST --prefix=/usr)
+(cd $BUILD_DIR; CC=$CC CFLAGS="-fpie -fpic" LDFLAGS="-pie" ./configure --host=$CONFIG_HOST --prefix=/usr --enable-widec)
 
 if [[ $? -ne 0 ]] ; then
     echo Configure failed ... stopping
@@ -50,22 +50,28 @@ echo "Running make"
 
 (cd $BUILD_DIR; make CC=$CC)
 
-echo "Ignoring build errors, because cross-compiling is so broken. So long as we got the"
-echo "two .a files, everything's good."
+echo "Build errors ignored, because the build script is too stupid to understand"
+echo "that we are cross-compiling"
 
 mkdir -p $BUILD_DIR/image/
-mkdir -p $BUILD_DIR/image/usr/lib
+
 
 echo "Running make install"
-(cd $BUILD_DIR; echo make DESTDIR=`pwd`/image install)
+(cd $BUILD_DIR; make DESTDIR=`pwd`/image install)
 
 if [[ $? -ne 0 ]] ; then
     echo make install failed ... stopping
     exit 1
 fi
 
+echo "Removing unnecessary terminal definitions"
+rm -rf $BUILD_DIR/image/usr/share/terminfo/*
+mkdir -p $BUILD_DIR/image/usr/share/terminfo/l
+cp linux $BUILD_DIR/image/usr/share/terminfo/l/
+
 echo "Linking shared objects"
-(cd $BUILD_DIR/image/usr/lib; for x in *.a ; do r=`echo $x | cut -f 1 -d .`;  echo $r; $CC -s -shared -fPIC -o $r.so -Wl,-soname,$r.so -Wl,--whole-archive $r.a -Wl,--no-whole-archive; done)
+#(cd $BUILD_DIR/image/usr/lib; $CC -s -pie -shared -fPIC -o libcurses.so -Wl,-soname,libcurses.so -Wl,--whole-archive libcurses.a -Wl,--no-whole-archive)
+(cd $BUILD_DIR/image/usr/lib; for x in *.a ; do r=`echo $x | cut -f 1 -d .`;  echo $r; $CC -s -pie -shared -fPIC -o $r.so -Wl,-soname,$r.so -Wl,--whole-archive $r.a -Wl,--no-whole-archive; done)
 
 echo "Building package"
 mkdir -p $BUILD_DIR/out
@@ -81,8 +87,8 @@ cp -p $DEB $DIST/
 
 echo "Populating compiler sysroot"
 
-mkdir -p $SYSROOT/usr/include/readline/
-(cd $BUILD_DIR; cp -pr image/usr/include/readline/* $SYSROOT/usr/include/readline/) 
+mkdir -p $SYSROOT/usr/include/ncurses
+(cd $BUILD_DIR; cp -pr image/usr/include/* $SYSROOT/usr/include/ncurses/) 
 (cd $BUILD_DIR; cp -pr image/usr/lib/* $SYSROOT/usr/lib/) 
 
 

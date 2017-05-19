@@ -1,0 +1,32 @@
+47c47,48
+< #
+---
+> NO_EXPAT=1
+> 
+57c58,59
+< #
+---
+> NO_GETTEXT=1
+> 
+107c109,110
+< #
+---
+> NO_GECOS_IN_PWENT=1
+> 
+216c219,220
+< #
+---
+> NO_ICONV=1
+> 
+241c245
+< #
+---
+> NO_NSEC=1
+471c475
+< PTHREAD_LIBS = -lpthread
+---
+> PTHREAD_LIBS = -lcurl -lssl -lcrypto
+1526c1530
+< 	EXTLIBS += -lrt
+---
+> #	EXTLIBS += -lrt

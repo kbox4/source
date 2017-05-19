@@ -35,7 +35,36 @@ else
 fi
 
 
-echo Running Configure...
+echo Running Configure for wide char support...
+
+
+(cd $BUILD_DIR; CC=$CC CFLAGS="-fpie -fpic" LDFLAGS="-pie" ./configure --host=$CONFIG_HOST --prefix=/usr --enable-widec)
+
+if [[ $? -ne 0 ]] ; then
+    echo Configure failed ... stopping
+    exit 1
+fi
+
+
+echo "Running make"
+
+(cd $BUILD_DIR; make CC=$CC)
+
+echo "Build errors ignored, because the build script is too stupid to understand"
+echo "that we are cross-compiling"
+
+mkdir -p $BUILD_DIR/image/
+
+
+echo "Running make install"
+(cd $BUILD_DIR; make DESTDIR=`pwd`/image install)
+
+if [[ $? -ne 0 ]] ; then
+    echo make install failed ... stopping
+    exit 1
+fi
+
+echo Running Configure for narrow char support...
 
 
 (cd $BUILD_DIR; CC=$CC CFLAGS="-fpie -fpic" LDFLAGS="-pie" ./configure --host=$CONFIG_HOST --prefix=/usr)
@@ -63,6 +92,7 @@ if [[ $? -ne 0 ]] ; then
     echo make install failed ... stopping
     exit 1
 fi
+
 
 echo "Removing unnecessary terminal definitions"
 rm -rf $BUILD_DIR/image/usr/share/terminfo/*

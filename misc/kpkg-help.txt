@@ -1,0 +1,22 @@
+* Install:
+
+- cp `kpkg` in /bin with exec perm
+- cp `sources` in etc
+
+* Usage: (kpkg --help)
+
+/bin/kpkg CMD PATTERN
+  CMD:
+    -l  list remote package in /etc/sources
+    -d  download remote package
+    -c  Resume interrupted download
+    -i  download and install remote package
+/bin/kpkg CMD PACKAGE.deb
+  CMD:
+    -i  install PACKAGE.deb
+    -u  unpack PACKAGE.deb to PACKAGE/ folder
+/bin/kpkg CMD FOLDER
+  CMD:
+    -n  create package tree in FOLDER/ 
+    -s  sync FOLDER/data with installed files
+    -p  pack FOLDER/ to FOLDER.deb

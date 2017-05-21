@@ -1,0 +1,154 @@
+#!/bin/bash
+usage() { cat <<EOF
+Usage:
+$0 CMD PATTERN
+  CMD:
+    -l  list remote package in /etc/sources
+    -d  download remote package
+    -c  Resume interrupted download
+    -i  download and install remote package
+$0 CMD PACKAGE.deb
+  CMD:
+    -i  install PACKAGE.deb
+    -u  unpack PACKAGE.deb to PACKAGE/ folder
+$0 CMD FOLDER
+  CMD:
+    -n  create package tree in FOLDER/ 
+    -s  sync FOLDER/data with installed files
+    -p  pack FOLDER/ to FOLDER.deb
+EOF
+}
+download() {
+  while [ $2 ]; do
+    [ ! -f $2 ] || rm $2
+    wget $1/$2
+    shift; shift
+  done
+}
+download_continue() {
+  while [ $2 ]; do
+    wget -c $1/$2
+    shift; shift
+  done
+}
+download_install() {
+  while [ $2 ]; do
+    [ ! -f $2 ] || rm $2
+    wget $1/$2
+    fix_install $2
+    shift; shift
+  done
+}
+fix_install() { # fix a bug in busybox dpkg ...
+  if [ -e /var/lib/dpkg/status.udeb.bak ]
+  then rm -r /var/lib/dpkg/status.udeb.bak
+  fi
+  dpkg -i $@
+}
+search() {
+  case $1 in
+    *.deb) PAT="$1[^ ]*$";;
+    *) PAT="$1[^ ]*\\.deb*$";;
+  esac
+  grep "$PAT" /etc/sources
+}
+show() {
+  while [ $2 ]; do
+    echo $2; shift; shift
+  done
+}
+CONTROL='Package:
+Version:
+Depends:
+Description:
+'
+new() {
+  dir=$1
+  mkdir $dir
+  cd $dir
+    mkdir control
+    mkdir data
+    echo 2.0 >debian-binary
+    echo $CONTROL >control/control
+  cd ..
+}
+pack() {
+  name=$1
+  dir=${name%.deb}
+  name=$dir.deb
+  cd $dir
+    [ ! -f data.tar.gz ] || rm data.tar.gz
+     [ ! -f control.tar.gz ] || rm control.tar.gz
+    cd data
+      tar cf ../data.tar ./
+      gzip ../data.tar
+    cd ..
+    cd control
+      tar cf ../control.tar ./
+      gzip ../control.tar
+    cd ..
+    ar r ../$name debian-binary control.tar.gz data.tar.gz
+  cd ..
+}
+sync() {
+  cwd=$CWD
+  cd $1/data
+    for o in `find`; do
+      i=/${o#./}
+      if [ ! -e $i ]; then
+        echo rm $o
+        rm -r $o
+      fi
+      [ -f $o ] || continue
+      if [ $i -nt $o ]; then
+        echo sync $o
+        cp -a $i $o
+      fi
+    done
+  cd $cwd
+}
+unpack() {
+  name=`basename $1`
+  dir=${name%.deb}
+  case $1 in
+    /*) name=$1;;
+    *) name=../$name;;
+  esac
+  [ ! -d $dir ] || rm -R $dir
+  mkdir $dir
+  cd $dir
+    ar x $name
+    mkdir control
+    cd control
+      tar xf ../control.*
+    cd ..
+    mkdir data
+    cd data
+      tar xf ../data.*
+    cd ..
+    rm control.* data.*
+  cd ..
+}
+# MAIN #
+case $1 in
+  -c) download_continue `search $2|head -1` ;;
+  -d) download `search $2|head -1` ;;
+  -i) i=$2
+      if [ -f $2 -a ${i%.deb} != $i ]
+      then # existing package
+        shift
+        fix_install $@
+      else # patterns
+        while [ $2 ]; do
+          download_install `search $2|head -1`
+          shift
+        done
+      fi ;;
+  -l) show `search $2` ;;
+  -n) new $2 ;;
+  -p) pack $2 ;;
+  -s) sync $2 ;;
+  -u) unpack $2 ;;
+  *) usage ; exit ;;
+esac
+# vim: set sw=2 expandtab:

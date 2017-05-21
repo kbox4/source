@@ -1,0 +1,7 @@
+Package: lftp
+Version: %VERSION%
+Section: networking
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A modern FTP client. 

@@ -15,7 +15,7 @@ the "source for KBOX"; until now, however, there has been no such thing.
 <p/>
 The main end-user documentation for KBOX is here:
 <p/>
-http://kevinboone.net/kbox4.html
+http://kevinboone.net/kbox.html
 <p/>
 This document provides technical information for people who might want to get 
 involved in developing the project.

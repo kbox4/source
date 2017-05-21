@@ -33,6 +33,10 @@ else
   echo "Building cached $VERSION"
 fi
 
+echo "Copying host files..."
+
+mkdir -p $SYSROOT/usr/include/arpa/
+cp /usr/include/arpa/ftp.h $SYSROOT/usr/include/arpa/
 
 echo Running Configure...
 
@@ -45,10 +49,11 @@ fi
 
 exit
 
-#echo "Patching"
+echo "Patching"
 
-#patch $BUILD_DIR/src/cmd_completion.c patch_cmd_completion.c
-#patch $BUILD_DIR/src/utils/utils_nix.c patch_utils_nix.c
+patch $BUILD_DIR/src/filemanager/filegui.c patch_filegui.c
+patch $BUILD_DIR/src/cons.handler.c patch_cons.handler.c
+patch $BUILD_DIR/src/editor/editcmd.c patch_editcmd.c
 
 #fi
 #skip

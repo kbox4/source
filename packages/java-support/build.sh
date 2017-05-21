@@ -12,8 +12,6 @@ DEB=$BUILD_DIR/$NAME-${VERSION}_kbox4_${DEB_ARCH}.deb
 mkdir -p $BUILD_DIR/target/tools
 mkdir -p $BUILD_DIR/target/dx
 
-if [ -f sodit ] ; then
-
 javac -target 1.6 -source 1.6  -d $BUILD_DIR/target/tools  src/com/sun/tools/javac/*.java src/com/sun/tools/javac/main/*.java src/com/sun/tools/javac/util/*.java src/com/sun/tools/javac/code/*.java src/com/sun/tools/javac/jvm/*.java src/com/sun/tools/javac/processing/*.java src/com/sun/source/util/*.java src/com/sun/tools/javac/tree/*.java src/com/sun/tools/javac/file/*.java src/com/sun/tools/javac/parser/*.java src/com/sun/tools/javac/comp/*.java src/com/sun/tools/javac/model/*.java src/com/sun/source/tree/*.java src/com/sun/tools/javac/api/*.java src/javax/tools/*.java src/com/sun/tools/javac/util/*.java src/javax/lang/model/element/*.java src/javax/lang/model/type/*.java src/javax/lang/model/util/*.java src/javax/annotation/processing/*.java src/javax/lang/model/*.java src/com/sun/source/tree/*.java src/com/sun/source/util/*.java src/com/sun/tools/javac/sym/*.java 
 
 javac -target 1.6 -source 1.6 -d $BUILD_DIR/target/dx src/com/android/dx/*.java src/com/android/dx/ssa/*.java src/com/android/dx/ssa/back/*.java src/com/android/dx/rop/*.java src/com/android/dx/rop/cst/*.java src/com/android/dx/rop/annotation/*.java src/com/android/dx/rop/code/*.java src/com/android/dx/rop/type/*.java src/com/android/dx/util/*.java src/com/android/dx/command/*.java src/com/android/dx/command/dexer/*.java src/com/android/dx/command/dump/*.java src/com/android/dx/command/annotool/*.java src/com/android/dx/dex/file/*.java src/com/android/dx/dex/code/*.java src/com/android/dx/dex/code/form/*.java  src/com/android/dx/dex/cf/*.java src/com/android/dx/cf/iface/*.java src/com/android/dx/cf/attrib/*.java src/com/android/dx/cf/direct/*.java src/com/android/dx/cf/cst/*.java src/com/android/dx/cf/code/*.java
@@ -24,8 +22,6 @@ javac -target 1.6 -source 1.6 -d $BUILD_DIR/target/dx src/com/android/dx/*.java 
 
 $DX --dex --output=$BUILD_DIR/target/dx.dex $BUILD_DIR/target/dx.jar
 $DX --dex --output=$BUILD_DIR/target/tools.dex $BUILD_DIR/target/tools.jar
-
-fi
 
 mkdir -p $BUILD_DIR/image/usr/share/java-support
 mkdir -p $BUILD_DIR/image/usr/bin

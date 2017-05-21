@@ -1,0 +1,8 @@
+375c375
+< #define HAVE_DECL_DN_EXPAND 1
+---
+> #define HAVE_DECL_DN_EXPAND 0
+536c536
+< #define HAVE_DN_EXPAND 1
+---
+> #define HAVE_DN_EXPAND 0

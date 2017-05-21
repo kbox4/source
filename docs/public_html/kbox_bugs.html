@@ -1,10 +1,14 @@
 <h1>KBOX limitations and known bugs</h1>
 
 KBOX is (always) a work in progress. There are some known bugs, which may at
-some point be fixed. There are, however, some fundamental limitations which
+some point be fixed. These are tracked on the 
+<a href="https://github.com/kbox4/source/issues">github issue tracker</a>.
+<p/>
+There are, however, some fundamental limitations which
 can probably never be fixed, because Android is what it is. I am
 in the process of moving the known bugs to the github repository --
 please bear with me.
+
 
 <h2>KBOX is a single-user system</h2>
 
@@ -17,6 +21,18 @@ explicitly when using utilities that expect one. Any utility that
 expects users to authenticate themslves will likely struggle, although
 the <code>kbox-login</code> package provides a stub implementation
 of <code>/bin/login</code> that can help in some situations.
+
+<h2>Many utilities expect a full keyboard</h2>
+
+For example, even the humble <code>hexedit</code> expects to be
+able to use function keys (F1, F2,...). Most Android virtual keyboards
+do not provide all the necessary keys, although some can be programmed
+to use other key combinations. Even many physical keyboards no longer
+provide them.
+<p/>
+Worse, if you have to rely on a virtual, on-screen keyboard, the screen
+size will change whenever the keyboard pops up. Some utilities will
+cope with this, but many will not.
 
 <h2>The Android C library lacks multi-byte character support</h2>
 

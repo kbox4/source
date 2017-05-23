@@ -1,0 +1,41 @@
+<h1>Project status</h1>
+
+KBOX4 is a substantial departure from previous versions -- not in what is included, but in the way it is built. Until KBOX4, the build process was
+largely ad-hoc -- unpack the source of some utility or other,
+hack at it until it builds, test, hack some more, repeat. The result of
+this process, if it succeeds, is a source tree with unrepeatable 
+configuration and modifications. This has two main limitations: first,
+it is impossible for other people to collaborate, because there is
+nothing substantial to share. Second, it is impossible to build the
+same application for a different architecture -- the entire ad-hoc
+build process has to be repeated.
+<p/>
+KBOX4 is better organized. Each utility that I have ported to KBOX4
+builds with a script and a set of patches. The build takes place in
+a staging area completely separate from these artefacts. The build
+can be repeated at any time, and with different compiler settings,
+and ought to succeed. Moving to a later version of some utility can
+-- in ideal cases -- be as simple as editing a version number in the
+build script.
+<p/>
+The hard part, of course, is having the self-discipline to create the
+script and patches. This is much, much more time-consuming than ad-hoc
+hacking at the source. The effort is really only repaid when it is time
+to build for a different architecture. In the best of cases -- which is
+most cases, as it turns out -- this simply amounts to changing the
+compiler settings in a script and rebuilding. 
+<p/>
+Most of the effort is now focused on building everything for 
+i686 (Intel) devices. There are relatively few i686-based phones,
+but this architecture is common in laptop-type devices. This building is,
+I hope, just an administrative exercise, for those utilities that have
+already been ported. However, it still takes time to test that 
+utilities work the same on i686 as the do on ARM. 
+<p/>
+I should point out that the utilities that made up KBOX3 were contributed
+by various people, and they may not all wish to sign up to the new
+build process, or to spend time repeating their work for different
+architectures. So it will remain the case that not everything is available
+for all architectures for some time, perhaps a long time.
+ 
+

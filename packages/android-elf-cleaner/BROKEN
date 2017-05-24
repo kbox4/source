@@ -1,0 +1,3 @@
+Although this builds, it doesn't work on Android. The author says it 
+needs g++ 5.x, and the NDK g++ is 4.9.
+

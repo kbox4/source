@@ -1,0 +1,6 @@
+This is a utility for removing unnecessary symbol table entries left in
+KBOX binaries by the Google NDK C compiler. These symbols cause
+error messages of the form "unused DT entry: type XXX"; they are
+harmless, but irritating. It should be run on the binary that shows
+the error and not, for example, on a script that runs the binary, or
+a symbolic link to it. Files are modified in place.

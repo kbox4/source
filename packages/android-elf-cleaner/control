@@ -1,0 +1,7 @@
+Package: android-elf-cleaner 
+Version: %VERSION%
+Section: utilities
+Priority: optional
+Architecture: %ARCH%
+Depends:  
+Description: A utility to remove unnecessary symbols left in Android binaries by the Google NDK compiler, which produce irritating "unused DT entry" messages. 

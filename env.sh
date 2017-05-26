@@ -11,8 +11,8 @@ ANDROID_SDK=/home/kevin/lib/android-sdk-linux
 SDK_BUILD_TOOLS_VERSION=19.0.1
 
 SYSROOT=$NDK/sysroot/
-ANDROID_PLATFORM_NAME=i686-linux-androideabi
-ANDROID_PLATFORM_DIR=$NDK/platforms/android-16/arch-x86
+ANDROID_PLATFORM_NAME=i686-linux-android
+ANDROID_PLATFORM_DIR=$NDK_HOME/platforms/android-16/arch-x86
 CC_PREFIX=${NDK}/bin/i686-linux-android-
 
 # Utilities in the android NDK toolchain -- it should not be necessary 
@@ -34,8 +34,8 @@ DEB_ARCH=i686
 # These settings are passed as the --host and --build switches of configure scripts
 # Some configure scripts need a long host (which is to say, target) name, and some a
 #  short one -- there doesn't seem to be much consistency here.
-CONFIG_HOST=arm
-CONFIG_FULLHOST=i686-linux-androideabi
+CONFIG_HOST=i686
+CONFIG_FULLHOST=i686-linux-android
 CONFIG_BUILD=i686
 
 export CC

@@ -17,7 +17,6 @@ TARGET=$BUILD_DIR/$NAME
 DEB=$BUILD_DIR/$NAME-${VERSION}_kbox4_${DEB_ARCH}.deb
 
 if [ -f skip ]; then
-
 if [ -f $DEB ]; then
   echo $DEB exists -- delete it to rebuild
   exit 0;
@@ -49,9 +48,6 @@ fi
 echo "Applying perl-cross patches"
 (cd $BUILD_DIR; tar zfx $PATCH_TARBALL --strip-components=1)
 
-fi
-#skip
-
 
 echo "Running configure"
 
@@ -59,6 +55,8 @@ ANDROID=$NDK_HOME
 TOOLCHAIN=$NDK
 PLATFORM=$ANDROID_PLATFORM_DIR
 export PATH=$PATH:$TOOLCHAIN/bin
+
+
 (cd $BUILD_DIR; LDFLAGS="-pie" CFLAGS="-fpic -fpie" ./configure --target=$ANDROID_PLATFORM_NAME --prefix=/usr --sysroot=$SYSROOT)
 
 if [[ $? -ne 0 ]] ; then
@@ -66,13 +64,14 @@ if [[ $? -ne 0 ]] ; then
     exit 1
 fi
 
-
-
 echo "Running make"
 
 mkdir -p $BUILD_DIR/image/
 
-(cd $BUILD_DIR; make -j4)
+(cd $BUILD_DIR; make -j1)
+
+#skip
+fi
 
 echo "Running make install"
 

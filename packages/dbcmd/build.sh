@@ -1,12 +1,12 @@
 #!/bin/bash
 
-VERSION=0.0.1
-VVERSION=v$VERSION
+VERSION=0.0.2
+VVERSION=$VERSION
 SUFFIX=tar.gz
 NAME=dbcmd
 DOWNLOAD_URL=https://github.com/kevinboone/$NAME/archive/$VVERSION.$SUFFIX
 
-#https://github.com/kevinboone/dbcmd/archive/v0.0.1.tar.gz
+#https://github.com/kevinboone/dbcmd/archive/v0.0.2.tar.gz
 
 . ../../env.sh
 
@@ -36,12 +36,12 @@ fi
 
 #echo patching
 
-patch $BUILD_DIR/src/token.c patch_token.c
+#patch $BUILD_DIR/src/token.c patch_token.c
 
 mkdir -p $BUILD_DIR/image/usr
 
 echo "Running make"
-(cd $BUILD_DIR; make CC=$CC DESTDIR=image/usr all install)
+(cd $BUILD_DIR; make CC=$CC DESTDIR=image/usr EXTRA_LIBS="-lssl -lcrypto -lz" all install)
 
 if [[ $? -ne 0 ]] ; then
     echo make failed ... stopping
